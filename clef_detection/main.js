@@ -1,5 +1,5 @@
 function getSegments() {
-    fetch('data/data.json')
+    fetch('../data/scannedMeasures.json')
         .then((response) => response.json())
         .then((data) => {
             let keys = Object.keys(data)
@@ -53,4 +53,4 @@ noButton.addEventListener("click", () => {
 
 // let slicePanel = document.querySelector("#original-slice")
 
-// slicePanel.src = "data/slice_18-19.jpg"
+// slicePanel.src = "../data/slice_18-19.jpg"
