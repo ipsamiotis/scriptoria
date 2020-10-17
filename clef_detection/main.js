@@ -1,5 +1,5 @@
 function getSegments() {
-    fetch('../data/scannedMeasures.json')
+    fetch('../data/clef_detection/scannedMeasures.json')
         .then((response) => response.json())
         .then((data) => {
             let keys = Object.keys(data)
@@ -15,10 +15,11 @@ function getSegments() {
 }
 
 function showFinalMsg() {
-    document.getElementById("slice-viewer").innerHTML = `
-    <div class="alert alert-dismissible alert-success">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Well done!</strong> You successfully completed the tasks.
+    document.getElementById("task-viewer").innerHTML = `
+    <div class="alert alert-success" style="margin: auto">
+         <h4 class="alert-heading"> Well done!</h4>
+         <hr>
+         <p>You successfully completed the tasks.</p>
     </div>`
 }
 
