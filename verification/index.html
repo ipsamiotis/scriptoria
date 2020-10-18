@@ -4,45 +4,34 @@
         <link rel="stylesheet" href="style.css">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Clef Detection</title>
+        <title>Transcription Verification</title>
     </head>
     <body>
         <header class="container-fluid mt-auto">
             <div class="row">
                 <div id="task-name" class="col align-self-center">
-                    <h1>Clef Detection Task</h1>
+                    <h1>Measure Verification Task</h1>
                 </div>
             </div>
         </header>
         <section class="container-fluid mt-auto">
             <div id="task-viewer" class="row">
-                <div id="slice-viewer" class="col-12 col-md-8 align-self-center">
+                <div id="slice-viewer" class="col align-self-center">
                     <img id="original-slice" class="border img-fluid" src="data:," alt="">
                 </div>
-                <div class="col-6 col-md-4 align-self-center">
+                <div id="slice-viewer" class="col align-self-center">
+                    <img id="render-slice" class="border img-fluid" src="data:," alt="">
+                </div>
+                <div class="col align-self-center">
                     <div class="card">
                         <div class="card-header">
                             <h3>Task Description</h3>
-                            <p>In the given measure, please indicate if at least one cleff exists.</p>
-                            <div class="row align-items-center">
-                                <div class="col align-self-center">
-                                    <h3>Example clefs:</h3>
-                                </div>
-                                <div class="col align-self-center">
-                                    <img id="g-clef" class="clef" src="../data/icons/G-clef.svg" alt="">
-                                </div>
-                                <div class="col align-self-center">
-                                    <img class="clef" src="../data/icons/FClef.svg" alt="">
-                                </div>
-                                <div class="col align-self-center">
-                                    <img class="clef" src="../data/icons/CClef.svg" alt="">
-                                </div>
-                            </div>
+                            <p>Based on the scanned segment to the left, please indicate if the transcribed version to the right is Correct or Problematic</p>
                         </div>
                         <div class="card-body">
                             <div class="btn-group btn-block" role="group" aria-label="Selection Buttons">
-                                <button type="button" id="yes-btn" class=" btn btn-success">There is a clef</button>
-                                <button type="button" id="no-btn" class="btn btn-primary">No clef</button>
+                                <button type="button" id="yes-btn" class=" btn btn-success">Correct</button>
+                                <button type="button" id="no-btn" class="btn btn-primary">Problematic</button>
                             </div>
                         </div>
                     </div>

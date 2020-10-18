@@ -1,7 +1,17 @@
 let previousMeasures = []
 
+function getRenderSegments(number) {
+    fetch('../data/verification/renders.json')
+        .then((response) => response.json())
+        .then((data) => {
+            let slice = data[number]
+            let slicePanel = document.querySelector("#render-slice")
+            slicePanel.src = slice["filename"]
+        });
+}
+
 function getSegments() {
-    fetch('../data/clef_detection/scannedMeasures.json')
+    fetch('../data/verification/scannedMeasures.json')
         .then((response) => response.json())
         .then((data) => {
             let keys = Object.keys(data)
@@ -17,6 +27,7 @@ function getSegments() {
             let slice = data[randKey]
             let slicePanel = document.querySelector("#original-slice")
             slicePanel.src = slice["filename"]
+            getRenderSegments(randKey)
         });
 }
 

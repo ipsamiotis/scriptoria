@@ -1,10 +1,16 @@
+let previousMeasures = []
+
 function getSegments() {
     fetch('../data/clef_recognition/scannedMeasures.json')
         .then((response) => response.json())
         .then((data) => {
             let keys = Object.keys(data)
-            // Generate random index based on number of keys
-            let randIndex = Math.floor(Math.random() * keys.length)
+            let randIndex = 0
+            while (previousMeasures.includes(randIndex)) {
+                // Generate random index based on number of keys
+                randIndex = Math.floor(Math.random() * keys.length)
+            }
+            previousMeasures.push(randIndex)
             // Select a key from the array of keys using the random index
             let randKey = keys[randIndex]
             // Use the key to get the corresponding name from the "names" object
