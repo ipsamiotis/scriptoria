@@ -119,7 +119,7 @@ cclefButton2.addEventListener("click", () => {
 submitButton.addEventListener("click", () => {
     if (gclefCounter > 0 || fclefCounter > 0 || cclefCounter > 0) {
         submitCounter++
-        progress = `${parseInt(progress) + 20}%`
+        progress = `${parseInt(progress) + 25}%`
         document.querySelector("#progress").style.width = progress
         if (toggleButton("#gclef-btn1")) toggleButton("#gclef-btn1")
         if (toggleButton("#fclef-btn1")) toggleButton("#fclef-btn1")
@@ -128,7 +128,7 @@ submitButton.addEventListener("click", () => {
         if (toggleButton("#fclef-btn2")) toggleButton("#fclef-btn2")
         if (toggleButton("#cclef-btn2")) toggleButton("#cclef-btn2")
 
-        if (submitCounter >= 5) showFinalMsg()
+        if (submitCounter >= 4) showFinalMsg()
         gclefCounter = fclefCounter = cclefCounter = 0
         getSegments()
     } else {

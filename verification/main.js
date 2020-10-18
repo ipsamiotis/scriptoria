@@ -51,16 +51,16 @@ let progress = document.querySelector("#progress").style.width
 
 yesButton.addEventListener("click", () => {
     yesSlices.push(document.querySelector("#original-slice").src)
-    progress = `${parseInt(progress) + 20}%`
+    progress = `${parseInt(progress) + 25}%`
     document.querySelector("#progress").style.width = progress
-    if (yesSlices.length + noSlices.length >= 5) showFinalMsg()
+    if (yesSlices.length + noSlices.length >= 4) showFinalMsg()
     getSegments()
 })
 
 noButton.addEventListener("click", () => {
     noSlices.push(document.querySelector("#original-slice").src)
-    progress = `${parseInt(progress) + 20}%`
+    progress = `${parseInt(progress) + 25}%`
     document.querySelector("#progress").style.width = progress
-    if (yesSlices.length + noSlices.length >= 5) showFinalMsg()
+    if (yesSlices.length + noSlices.length >= 4) showFinalMsg()
     getSegments()
 })
