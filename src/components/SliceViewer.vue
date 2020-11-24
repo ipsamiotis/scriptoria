@@ -1,7 +1,5 @@
 <template>
-    <div class="slice-viewer">
-        <img :src="require(`@/assets/${taskType}/${sliceFile}`)">
-    </div>
+    <img v-if="taskType" :src="require(`@/assets/${taskType}/${sliceFile}`)">
 </template>
 
 <script>
@@ -11,13 +9,13 @@ export default {
         taskType: {
             type: String,
             require: true,
-            default: "clef_detection"
+            default: ""
 
         },
         sliceFile: {
             type: String,
             required: true,
-            default: "p1_m1.png"
+            default: ""
         }
     }
 }

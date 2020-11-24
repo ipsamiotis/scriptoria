@@ -1,6 +1,6 @@
 <template>
     <div class="task">
-        <div class="task__header">
+        <div class="task-header">
             <h3>Task Description</h3>
             <p>Is there at least one cleff in this measure?</p>
             <h4>Example clefs:
@@ -9,11 +9,11 @@
             <img class="clef" src="@/assets/icons/CClef.svg" alt="">
             </h4>
         </div>
-        <div class="task__items">
+        <div class="task-items">
             <SliceViewer :task-type="state.randomPick.taskType" :slice-file="state.randomPick.filename"/>
         </div>
-        <div class="task__input">
-            <BooleanInput @need-slice="getSlice"/>
+        <div class="task-input">
+            <BooleanInput :task-type="state.randomPick.taskType" @need-slice="getSlice"/>
         </div>
     </div>
 </template>
@@ -59,7 +59,9 @@ export default {
 
 <style lang="scss" scoped>
     .task {
-        .task__header {
+        display: grid;
+        grid-template-rows: 1fr 2.3fr 1fr;
+        .task-header {
             h4 {
                 text-align: center;
             }
