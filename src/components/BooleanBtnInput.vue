@@ -6,8 +6,7 @@
 <script>
 import {reactive, onUpdated} from "vue"
 export default {
-    name: "BooleanInput",
-    // emits: ["need-slice"],
+    name: "BooleanBtnInput",
     props: {
         taskType: {
             type: String,

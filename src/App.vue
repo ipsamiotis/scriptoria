@@ -1,14 +1,17 @@
 <template>
-  <ClefDetection/>
+  <!-- <ClefDetection/> -->
+  <ClefRecognition/>
 </template>
 
 <script>
-import ClefDetection from './components/ClefDetection.vue'
+// import ClefDetection from './components/ClefDetection.vue'
+import ClefRecognition from '@/components/ClefRecognition.vue'
 
 export default {
   name: 'App',
   components: {
-    ClefDetection
+    // ClefDetection
+    ClefRecognition
   }
 }
 </script>

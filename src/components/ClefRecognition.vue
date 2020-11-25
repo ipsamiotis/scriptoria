@@ -1,19 +1,14 @@
 <template>
     <div class="task">
         <div class="task-header">
-            <h3>Clef Detection</h3>
-            <p>Is there at least one cleff in this measure?</p>
-            <h4>Example clefs:
-            <img id="g-clef" class="clef" src="@/assets/icons/G-clef.svg" alt="">
-            <img class="clef" src="@/assets/icons/FClef.svg" alt="">
-            <img class="clef" src="@/assets/icons/CClef.svg" alt="">
-            </h4>
+            <h3>Clef Recognition</h3>
+            <p>The given measure contains a clef, please select the type. Multiple answers possible</p>
         </div>
         <div class="task-items">
             <SliceViewer :task-type="state.randomPick.taskType" :slice-file="state.randomPick.filename"/>
         </div>
         <div class="task-input">
-            <BooleanBtnInput :task-type="state.randomPick.taskType" @need-slice="getSlice"/>
+            <ClefBtnInput :task-type="state.randomPick.taskType" @need-slice="getSlice"/>
         </div>
     </div>
 </template>
@@ -22,15 +17,15 @@
 import {reactive, onMounted} from "vue"
 
 import SliceViewer from "@/components/SliceViewer"
-import BooleanBtnInput from "@/components/BooleanBtnInput"
+import ClefBtnInput from "@/components/ClefBtnInput"
 
 import {tasks} from "@/assets/scannedMeasures"
 
 export default {
-    name: "ClefDetection",
+    name: "ClefRecognition",
     components: {
         SliceViewer,
-        BooleanBtnInput
+        ClefBtnInput
     },
 
     setup () {
@@ -54,24 +49,8 @@ export default {
         }
     }
 }
-
 </script>
 
 <style lang="scss" scoped>
-    .task {
-        display: grid;
-        grid-template-rows: 1fr 2.3fr 1fr;
-        .task-header {
-            h4 {
-                text-align: center;
-            }
-            .clef {
-                margin: 6px;
-                height: 20px;
-            }
-            #g-clef {
-                height: 30px;
-            }
-        }
-    }
+
 </style>

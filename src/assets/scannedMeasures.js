@@ -83,5 +83,60 @@ export const tasks = [
         "filename": "p1_m17.png",
         "taskType": "clef_detection",
         "taskID": 16
+    },
+    {
+        "filename": "p1_m1.png",
+        "taskType": "clef_recognition",
+        "taskID": 17
+    },
+    {
+        "filename": "p1_m17.png",
+        "taskType": "clef_recognition",
+        "taskID": 18
+    },
+    {
+        "filename": "p1_m23.png",
+        "taskType": "clef_recognition",
+        "taskID": 19
+    },
+    {
+        "filename": "p2_m39.png",
+        "taskType": "clef_recognition",
+        "taskID": 20
+    },
+    {
+        "filename": "p2_m43.png",
+        "taskType": "clef_recognition",
+        "taskID": 21
+    },
+    {
+        "filename": "p3_m54.png",
+        "taskType": "clef_recognition",
+        "taskID": 22
+    },
+    {
+        "filename": "p3_m59.png",
+        "taskType": "clef_recognition",
+        "taskID": 23
+    },
+    {
+        "filename": "p3_m63.png",
+        "taskType": "clef_recognition",
+        "taskID": 24
+    },
+    {
+        "filename": "p3_m64.png",
+        "taskType": "clef_recognition",
+        "taskID": 25
+    },
+    {
+        "filename": "p3_m68.png",
+        "taskType": "clef_recognition",
+        "taskID": 26
+    },
+    {
+        "filename": "p3_m69.png",
+        "taskType": "clef_recognition",
+        "taskID": 27
     }
 ]
