@@ -18,7 +18,8 @@ export default {
 
         const state = reactive({
             trueText: "",
-            falseText: ""
+            falseText: "",
+            thereIsArtefact: false
         })
 
         onUpdated(() => {
@@ -34,7 +35,8 @@ export default {
 
         function labelSlice(label){
             console.log(label)
-            ctx.emit('need-slice', true)
+            state.thereIsArtefact = true
+            ctx.emit('need-slice', true, state.thereIsArtefact)
         }
 
         return {

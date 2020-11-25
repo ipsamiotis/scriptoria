@@ -33,7 +33,9 @@ export default {
             randomPick: {}
         })
 
-        function getSlice(needSlice){
+        function getSlice(...args){
+            const [needSlice, label] = args
+            console.log(needSlice, label)
             if (needSlice) {
                 state.randomPick = tasks[Math.floor(Math.random() * tasks.length)]
             }

@@ -1,5 +1,4 @@
 <template>
-    <span>Upper staff</span>
     <div class="upper-staff">
         <button id="btn-1" class="btn-toggle" @click="toggleButtons('g-clef', $event)">
             <img id="g-clef" src="@/assets/icons/G-clef.svg">
@@ -11,8 +10,8 @@
             <img id="c-clef" src="@/assets/icons/CClef.svg" alt="">
         </button>
     </div>
-    <button>
-        Submit
+    <button class="submit-btn" @click="labelSlice(true)">
+        Ready
     </button>
 </template>
 
@@ -37,23 +36,17 @@ export default {
         })
 
         function toggleButtons(buttonLabel, event){
-            let targetId = event.currentTarget.id;
             if (event.currentTarget.className == "btn-toggle" && !state.sliceLabels.includes()) {
                 state.sliceLabels.push(buttonLabel)
                 event.currentTarget.className = "btn-toggle-active"
-                console.log(targetId, event.currentTarget.className)
-                console.log(state.sliceLabels)
             } else {
                 state.sliceLabels.splice(state.sliceLabels.indexOf(buttonLabel), 1)
                 event.currentTarget.className = "btn-toggle"
-                console.log(targetId, event.currentTarget.className)
-                console.log(state.sliceLabels)
             }
         }
 
         function labelSlice(label){
-            console.log(label)
-            ctx.emit('need-slice', true)
+            ctx.emit('need-slice', label, state.sliceLabels)
         }
 
         return {
@@ -106,6 +99,21 @@ export default {
         }
         #c-clef {
             height: 30px;
+        }
+    }
+    .submit-btn {
+        margin-top: 6px;
+        border: 2px solid #cb8132;
+        // border-radius: 8%;
+        background-color: #eba147;
+        height: 40px;
+        width: 180px;
+        font-weight: bold;
+        color: white;
+        font-size: 11pt;
+        cursor: pointer;
+        &:hover {
+            transform: scale(1.1, 1.1);
         }
     }
 </style>
