@@ -34,8 +34,7 @@ export default {
         }
 
         function labelSlice(label){
-            console.log(label)
-            state.thereIsArtefact = true
+            state.thereIsArtefact = label
             ctx.emit('need-slice', true, state.thereIsArtefact)
         }
 

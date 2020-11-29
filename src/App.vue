@@ -1,18 +1,48 @@
+// NEED TO RETRIEVE NEW SLICE FROM BUTTON COMPONENT
+
 <template>
-  <!-- <ClefDetection/> -->
-  <ClefRecognition/>
+    <!-- <div v-if="state.typeOfTask == 'clef_detection'">
+        <ClefDetection/>
+    </div>
+    <div v-else-if="state.typeOfTask == 'clef_recognition'"> -->
+        <ClefRecognition/>
+    <!-- </div> -->
 </template>
 
 <script>
 // import ClefDetection from './components/ClefDetection.vue'
 import ClefRecognition from '@/components/ClefRecognition.vue'
 
+import {tasks} from "@/assets/scannedMeasures"
+
+import {reactive, onMounted} from 'vue'
+
 export default {
-  name: 'App',
-  components: {
-    // ClefDetection
-    ClefRecognition
-  }
+    name: 'App',
+    components: {
+        // ClefDetection,
+        ClefRecognition
+    },
+    setup(){
+        const state = reactive({
+            typeOfTask: {}
+        })
+
+        function receiveTasks(){
+            for (let task in tasks) {
+                state.typeOfTask = task
+            }
+        }
+
+        onMounted(() => {
+            receiveTasks()
+        })
+
+        return {
+            state,
+            // getSlice
+        }
+    }
 }
 </script>
 

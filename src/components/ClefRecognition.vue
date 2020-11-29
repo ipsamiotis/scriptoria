@@ -8,7 +8,7 @@
             <SliceViewer :task-type="state.randomPick.taskType" :slice-file="state.randomPick.filename"/>
         </div>
         <div class="task-input">
-            <ClefBtnInput :task-type="state.randomPick.taskType" @need-slice="getSlice"/>
+            <ClefRecButtons :task-type="state.randomPick.taskType" @need-slice="getSlice"/>
         </div>
     </div>
 </template>
@@ -17,7 +17,7 @@
 import {reactive, onMounted} from "vue"
 
 import SliceViewer from "@/components/SliceViewer"
-import ClefBtnInput from "@/components/ClefBtnInput"
+import ClefRecButtons from "@/components/ClefRecButtons"
 
 import {tasks} from "@/assets/scannedMeasures"
 
@@ -25,7 +25,7 @@ export default {
     name: "ClefRecognition",
     components: {
         SliceViewer,
-        ClefBtnInput
+        ClefRecButtons
     },
 
     setup () {
