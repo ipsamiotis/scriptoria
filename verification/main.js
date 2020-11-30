@@ -11,7 +11,7 @@ function getRenderSegments(number) {
 }
 
 function getSegments() {
-    fetch('../data/verification/scannedMeasures.json')
+    fetch('../data/verification/slices.json')
         .then((response) => response.json())
         .then((data) => {
             let keys = Object.keys(data)

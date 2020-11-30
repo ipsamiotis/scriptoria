@@ -1,16 +1,12 @@
 <template>
     <div class="task">
         <div class="task-header">
-            <h3>Clef Detection</h3>
-            <p>Is there at least one cleff in this measure?</p>
-            <h4>Example clefs:
-            <img id="g-clef" class="clef" src="@/assets/icons/G-clef.svg" alt="">
-            <img class="clef" src="@/assets/icons/FClef.svg" alt="">
-            <img class="clef" src="@/assets/icons/CClef.svg" alt="">
-            </h4>
+            <h3>Segment Verification</h3>
+            <p>Compare the two. Is the version on the right is correct or problematic?</p>
         </div>
         <div class="task-items">
             <SliceViewer :task-type="state.randomPick.taskType" :slice-file="state.randomPick.filename"/>
+            <VerovioViewer :task-type="state.randomPick.taskType" :slice-file="state.randomPick.filename"/>
         </div>
         <div class="task-input">
             <BooleanBtnInput :task-type="state.randomPick.taskType" @need-slice="getSlice"/>
@@ -19,20 +15,21 @@
 </template>
 
 <script>
-import {reactive, onMounted} from "vue"
-
-import SliceViewer from "@/components/SliceViewer"
-import BooleanBtnInput from "@/components/BooleanBtnInput"
+import {reactive, onMounted} from 'vue'
 
 import {tasks} from "@/assets/slices"
 
+import SliceViewer from "@/components/SliceViewer"
+import VerovioViewer from "@/components/VerovioViewer"
+import BooleanBtnInput from "@/components/BooleanBtnInput"
+
 export default {
-    name: "ClefDetection",
+    name: "VerifySlices",
     components: {
         SliceViewer,
+        VerovioViewer,
         BooleanBtnInput
     },
-
     setup () {
         const state = reactive({
             randomPick: {}
@@ -54,24 +51,8 @@ export default {
         }
     }
 }
-
 </script>
 
 <style lang="scss" scoped>
-    .task {
-        display: grid;
-        grid-template-rows: 1fr 2.3fr 1fr;
-        .task-header {
-            h4 {
-                text-align: center;
-            }
-            .clef {
-                margin: 6px;
-                height: 20px;
-            }
-            #g-clef {
-                height: 30px;
-            }
-        }
-    }
+
 </style>

@@ -19,7 +19,7 @@ import {reactive, onMounted} from "vue"
 import SliceViewer from "@/components/SliceViewer"
 import ClefRecButtons from "@/components/ClefRecButtons"
 
-import {tasks} from "@/assets/scannedMeasures"
+import {tasks} from "@/assets/slices"
 
 export default {
     name: "ClefRecognition",
@@ -35,7 +35,7 @@ export default {
 
         function getSlice(...args){
             const [needSlice, label] = args
-            console.log(needSlice, label)
+            console.log(label)
             if (needSlice) {
                 state.randomPick = tasks[Math.floor(Math.random() * tasks.length)]
             }

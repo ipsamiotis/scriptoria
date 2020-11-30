@@ -30,6 +30,9 @@ export default {
             if (props.taskType == "clef_detection") {
                 state.trueText = "Yes, there is a clef"
                 state.falseText = "No, there is no clef"
+            } else if (props.taskType == "verify_slice") {
+                state.trueText = "Correct"
+                state.falseText = "Problematic"
             }
         }
 

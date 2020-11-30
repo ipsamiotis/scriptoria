@@ -138,5 +138,29 @@ export const tasks = [
         "filename": "p3_m69.png",
         "taskType": "clef_recognition",
         "taskID": 27
-    }
+    },
+    // {
+    //     "filename": "var2_m23-24.png",
+    //     "taskType": "verify_slice",
+    //     "mei_file": "var2_m23-24.mei",
+    //     "taskID": 28
+    // },
+    // {
+    //     "filename": "var3_m27.png",
+    //     "taskType": "verify_slice",
+    //     "mei_file": "var3_m27.mei",
+    //     "taskID": 29
+    // },
+    // {
+    //     "filename": "var3_m31.png",
+    //     "taskType": "verify_slice",
+    //     "mei_file": "var3_m31.mei",
+    //     "taskID": 30
+    // },
+    // {
+    //     "filename": "var4_m33-34-35.png",
+    //     "taskType": "verify_slice",
+    //     "mei_file": "var4_m33-34-35.mei",
+    //     "taskID": 31
+    // }
 ]

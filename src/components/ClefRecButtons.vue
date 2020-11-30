@@ -1,12 +1,17 @@
 <template>
     <div id="button-group">
-        <button id="btn-1" class="btn-toggle__disabled" @click="toggleButtons('g-clef', $event)">
+        <button id="btn-1" class="btn-toggle__inactive" @click="toggleButtons('no-clef', $event)">
+            <div id="no-clef">
+                No Clef
+            </div>
+        </button>
+        <button id="btn-2" class="btn-toggle__inactive" @click="toggleButtons('g-clef', $event)">
             <img id="g-clef" src="@/assets/icons/G-clef.svg">
         </button>
-        <button id="btn-2" class="btn-toggle__disabled" @click="toggleButtons('f-clef', $event)">
+        <button id="btn-3" class="btn-toggle__inactive" @click="toggleButtons('f-clef', $event)">
             <img id="f-clef" src="@/assets/icons/FClef.svg" alt="">
         </button>
-        <button id="btn-3" class="btn-toggle__disabled" @click="toggleButtons('c-clef', $event)">
+        <button id="btn-4" class="btn-toggle__inactive" @click="toggleButtons('c-clef', $event)">
             <img id="c-clef" src="@/assets/icons/CClef.svg" alt="">
         </button>
     </div>
@@ -37,13 +42,26 @@ export default {
         })
 
         function toggleButtons(buttonLabel, event){
-            if (event.currentTarget.className == "btn-toggle__disabled" && !state.sliceLabels.includes()) {
+            let button = event.currentTarget
+
+            if (button.id == "btn-1" && !state.sliceLabels.includes(button.className) && button.className != "btn-toggle__disabled"){
                 state.sliceLabels.push(buttonLabel)
-                event.currentTarget.className = "btn-toggle__active"
+                button.className = "btn-toggle__active"
                 state.readyButton = "ready-btn__active"
-            } else {
+                while(document.getElementsByClassName("btn-toggle__inactive").length > 0){
+                    document.getElementsByClassName("btn-toggle__inactive")[0].className = 'btn-toggle__disabled'
+                }
+            } else if (button.id != "btn-1" && button.className != "btn-toggle__disabled" && button.className == "btn-toggle__inactive" && !state.sliceLabels.includes(buttonLabel)) {
+                state.sliceLabels.push(buttonLabel)
+                button.className = "btn-toggle__active"
+                document.getElementById("btn-1").className = "btn-toggle__disabled"
+                state.readyButton = "ready-btn__active"
+            } else if (button.className == "btn-toggle__active" && state.sliceLabels.includes(buttonLabel)) {
                 state.sliceLabels.splice(state.sliceLabels.indexOf(buttonLabel), 1)
-                event.currentTarget.className = "btn-toggle__disabled"
+                button.className = "btn-toggle__inactive"
+                while(document.getElementsByClassName("btn-toggle__disabled").length > 0 && document.getElementsByClassName("btn-toggle__active").length == 0){
+                    document.getElementsByClassName("btn-toggle__disabled")[0].className = 'btn-toggle__inactive'
+                }
                 if (document.getElementsByClassName("btn-toggle__active").length == 0) {
                     state.readyButton = "ready-btn__disabled"
                 }
@@ -58,9 +76,10 @@ export default {
         }
 
         function refreshButtons() {
-            document.getElementById("btn-1").className = "btn-toggle__disabled"
-            document.getElementById("btn-2").className = "btn-toggle__disabled"
-            document.getElementById("btn-3").className = "btn-toggle__disabled"
+            document.getElementById("btn-1").className = "btn-toggle__inactive"
+            document.getElementById("btn-2").className = "btn-toggle__inactive"
+            document.getElementById("btn-3").className = "btn-toggle__inactive"
+            document.getElementById("btn-4").className = "btn-toggle__inactive"
             state.sliceLabels = []
             state.readyButton = "ready-btn__disabled"
         }
@@ -76,7 +95,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .btn-toggle__disabled {
+    .btn-toggle__inactive {
         margin-right: 6px;
         border: 1px solid #cb8132;
         border-radius: 20%;
@@ -118,10 +137,28 @@ export default {
             height: 30px;
         }
     }
+
+    .btn-toggle__disabled {
+        margin-right: 6px;
+        border: 2px solid #c69a6b;
+        background-color: #ededed;
+        border-radius: 20%;
+        height: 60px;
+        width: 55px;
+        #g-clef {
+            height: 30px;
+        }
+        #f-clef {
+            height: 30px;
+        }
+        #c-clef {
+            height: 30px;
+        }
+    }
+
     .ready-btn__active {
         margin-top: 6px;
         border: 2px solid #cb8132;
-        // border-radius: 8%;
         background-color: #eba147;
         height: 40px;
         width: 180px;

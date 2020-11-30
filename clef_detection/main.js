@@ -1,7 +1,7 @@
 let previousMeasures = []
 
 function getSegments() {
-    fetch('../data/clef_detection/scannedMeasures.json')
+    fetch('../data/clef_detection/slices.json')
         .then((response) => response.json())
         .then((data) => {
             let keys = Object.keys(data)
