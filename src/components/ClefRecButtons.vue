@@ -44,13 +44,15 @@ export default {
         function toggleButtons(buttonLabel, event){
             let button = event.currentTarget
 
-            if (button.id == "btn-1" && !state.sliceLabels.includes(button.className) && button.className != "btn-toggle__disabled"){
+            if (button.id == "btn-1" && !state.sliceLabels.includes(button.className) && button.className != "btn-toggle__disabled" && button.className != "btn-toggle__active"){
+                console.log(state.sliceLabels)
                 state.sliceLabels.push(buttonLabel)
                 button.className = "btn-toggle__active"
                 state.readyButton = "ready-btn__active"
                 while(document.getElementsByClassName("btn-toggle__inactive").length > 0){
                     document.getElementsByClassName("btn-toggle__inactive")[0].className = 'btn-toggle__disabled'
                 }
+                console.log(button.className)
             } else if (button.id != "btn-1" && button.className != "btn-toggle__disabled" && button.className == "btn-toggle__inactive" && !state.sliceLabels.includes(buttonLabel)) {
                 state.sliceLabels.push(buttonLabel)
                 button.className = "btn-toggle__active"
@@ -59,7 +61,8 @@ export default {
             } else if (button.className == "btn-toggle__active" && state.sliceLabels.includes(buttonLabel)) {
                 state.sliceLabels.splice(state.sliceLabels.indexOf(buttonLabel), 1)
                 button.className = "btn-toggle__inactive"
-                while(document.getElementsByClassName("btn-toggle__disabled").length > 0 && document.getElementsByClassName("btn-toggle__active").length == 0){
+                while(document.getElementsByClassName("btn-toggle__disabled").length > 0 //) {
+                && document.getElementsByClassName("btn-toggle__active").length == 0){
                     document.getElementsByClassName("btn-toggle__disabled")[0].className = 'btn-toggle__inactive'
                 }
                 if (document.getElementsByClassName("btn-toggle__active").length == 0) {

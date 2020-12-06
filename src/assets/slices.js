@@ -2,7 +2,8 @@ export const tasks = [
     {
         "filename": "p1_m1.png",
         "taskType": "clef_detection",
-        "taskID": 1
+        "taskID": 1,
+        "taskContext": "xml"
     },
     {
         "filename": "p1_m2.png",

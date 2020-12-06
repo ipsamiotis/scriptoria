@@ -1,10 +1,10 @@
 // NEED TO RETRIEVE NEW SLICE FROM BUTTON COMPONENT
 
 <template>
-    <!-- <div v-if="state.typeOfTask == 'clef_detection'">
-        <ClefDetection/>
-    </div>
-    <div v-else-if="state.typeOfTask == 'clef_recognition'"> -->
+    <!-- <div v-if="state.typeOfTask == 'clef_detection'"> -->
+        <!-- <ClefDetection/> -->
+    <!-- </div> -->
+    <!-- <div v-else-if="state.typeOfTask == 'clef_recognition'"> -->
         <ClefRecognition/>
     <!-- </div> -->
     <!-- <div v-else-if="state.typeOfTask == 'clef_recognition'"> -->
