@@ -5,17 +5,17 @@
         <!-- <ClefDetection/> -->
     <!-- </div> -->
     <!-- <div v-else-if="state.typeOfTask == 'clef_recognition'"> -->
-        <ClefRecognition/>
+        <!-- <ClefRecognition/> -->
     <!-- </div> -->
-    <!-- <div v-else-if="state.typeOfTask == 'clef_recognition'"> -->
-        <!-- <VerifySlices/> -->
+    <!-- <div v-else-if="state.typeOfTask == 'time_recognition'"> -->
+        <TimeRecognition/>
     <!-- </div> -->
 </template>
 
 <script>
 // import ClefDetection from './components/ClefDetection.vue'
-import ClefRecognition from '@/components/ClefRecognition.vue'
-// import VerifySlices from '@/components/VerifySlices.vue'
+// import ClefRecognition from '@/components/ClefRecognition.vue'
+import TimeRecognition from '@/components/TimeRecognition.vue'
 
 import {tasks} from "@/assets/slices"
 
@@ -25,8 +25,8 @@ export default {
     name: 'App',
     components: {
         // ClefDetection,
-        ClefRecognition
-        // VerifySlices
+        // ClefRecognition,
+        TimeRecognition
     },
     setup(){
         const state = reactive({
