@@ -1,6 +1,6 @@
-// NEED TO RETRIEVE NEW SLICE FROM BUTTON COMPONENT
-
 <template>
+    <!-- <router-link to="/">Home</router-link> | -->
+    <!-- <router-link to="/about">About</router-link> -->
     <!-- <div v-if="state.typeOfTask == 'clef_detection'"> -->
         <!-- <ClefDetection/> -->
     <!-- </div> -->
@@ -8,40 +8,42 @@
         <!-- <ClefRecognition/> -->
     <!-- </div> -->
     <!-- <div v-else-if="state.typeOfTask == 'time_recognition'"> -->
-        <TimeRecognition/>
+        <!-- <TimeRecognition/> -->
     <!-- </div> -->
+    <router-view></router-view>
 </template>
 
 <script>
 // import ClefDetection from './components/ClefDetection.vue'
 // import ClefRecognition from '@/components/ClefRecognition.vue'
-import TimeRecognition from '@/components/TimeRecognition.vue'
+// import TimeRecognition from '@/components/TimeRecognition.vue'
 
-import {tasks} from "@/assets/slices"
+// import {tasks} from "@/assets/slices"
 
-import {reactive, onMounted} from 'vue'
+import {reactive} from 'vue'
 
 export default {
     name: 'App',
     components: {
         // ClefDetection,
         // ClefRecognition,
-        TimeRecognition
+        // TimeRecognition
     },
     setup(){
         const state = reactive({
             typeOfTask: {}
         })
 
-        function receiveTasks(){
-            for (let task in tasks) {
-                state.typeOfTask = task
-            }
-        }
+        // function receiveTasks(){
+        //     for (let task in tasks) {
+        //         state.typeOfTask = tasks[task]
+        //         // console.log(tasks[task])
+        //     }
+        // }
 
-        onMounted(() => {
-            receiveTasks()
-        })
+        // onMounted(() => {
+        //     receiveTasks()
+        // })
 
         return {
             state

@@ -2,19 +2,21 @@
     <div class="task">
         <div class="task-header">
             <h3>Time Recognition</h3>
+            <strong>{{taskId}}</strong>
             <p>The given measure contains a time signature, please select the type. Multiple answers possible</p>
         </div>
         <div class="task-items">
-            <SliceViewer :task-type="state.randomPick.taskType" :slice-file="state.randomPick.filename"/>
+            <SliceViewer :task-type="state.selectedTask.taskType" :slice-file="state.selectedTask.filename"/>
         </div>
         <div class="task-input">
-            <TimeRecButtons :task-type="state.randomPick.taskType" @need-slice="getSlice"/>
+            <TimeRecButtons :task-type="state.selectedTask.taskType" @need-slice="getSlice"/>
         </div>
     </div>
 </template>
 
 <script>
-import {reactive, onMounted} from "vue"
+import {reactive, onMounted, computed} from "vue"
+import {useRoute} from 'vue-router';
 
 import SliceViewer from "@/components/SliceViewer"
 import TimeRecButtons from "@/components/TimeRecButtons"
@@ -22,22 +24,32 @@ import TimeRecButtons from "@/components/TimeRecButtons"
 import {tasks} from "@/assets/slices"
 
 export default {
-    name: "ClefRecognition",
+    name: "TimeRecognition",
     components: {
         SliceViewer,
         TimeRecButtons
     },
 
     setup () {
+        const route = useRoute();
+        const taskId = computed(() => route.params.taskId)
+
+
         const state = reactive({
-            randomPick: {}
+            selectedTask: {}
         })
 
         function getSlice(...args){
             const [needSlice, label] = args
             console.log(label)
+            // console.log(taskId.value)
             if (needSlice) {
-                state.randomPick = tasks[Math.floor(Math.random() * tasks.length)]
+                for (let task in tasks) {
+                    // If (taskId) fetchTaskFromApi(taskId) -> for tasksIDs from backend
+                    if (tasks[task].taskID == taskId.value) {
+                        state.selectedTask = tasks[task]
+                    }
+                }
             }
         }
 
@@ -47,7 +59,8 @@ export default {
 
         return {
             state,
-            getSlice
+            getSlice,
+            taskId
         }
     }
 }
