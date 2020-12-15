@@ -3,7 +3,7 @@
     <link href="https://unpkg.com/primeicons/primeicons.css " rel="stylesheet">
     <div id="button-group">
         <button id="no-key" class="btn-toggle__inactive" @click="toggleButtons('no-key', $event)">
-            No signature
+            No Signature
         </button>
         <button id="sharp" class="btn-toggle__inactive" @click="toggleButtons('sharp', $event)">
             <img src="@/assets/icons/Sharp.svg">

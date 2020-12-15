@@ -1,9 +1,9 @@
 <template>
     <div class="task">
         <div class="task-header">
-            <h3>Time Recognition</h3>
-            <strong>{{taskId}}</strong>
-            <p>The given measure contains a time signature, please select the type. Multiple answers possible</p>
+            <h3>Time Recognition {{taskId}}</h3>
+            The given segment might contain a time signature. <br>
+            Select "No Signature" or input the correct numbers, in case you recognise any.<br>
         </div>
         <div class="task-items">
             <SliceViewer :task-type="state.selectedTask.taskType" :slice-file="state.selectedTask.filename"/>

@@ -1,9 +1,10 @@
 <template>
     <div class="task">
         <div class="task-header">
-            <h3>Clef Recognition</h3>
-            <strong>{{taskId}}</strong>
-            <p>The given measure contains a clef, please select the type. Multiple answers possible</p>
+            <h3>Clef Recognition {{taskId}}</h3>
+            The given segment might contain a clef. <br>
+            Select "No Clef" or the types of clef(s), in case you recognise any.<br>
+            <strong> Ignore the starting ones!</strong>
         </div>
         <div class="task-items">
             <SliceViewer :task-type="state.selectedTask.taskType" :slice-file="state.selectedTask.filename"/>

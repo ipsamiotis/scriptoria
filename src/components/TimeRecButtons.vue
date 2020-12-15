@@ -5,7 +5,7 @@
         <label for=""></label>
         <button id="btn-1" class="btn-toggle__inactive" @click="toggleButtons('no-time', $event)">
             <div id="no-time">
-                No signature
+                No Signature
             </div>
         </button>
         <label for="nominator">Upper</label>

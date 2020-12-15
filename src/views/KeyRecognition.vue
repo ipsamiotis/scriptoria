@@ -1,9 +1,9 @@
 <template>
     <div class="task">
         <div class="task-header">
-            <h3>Key Recognition</h3>
-            <strong>{{taskId}}</strong>
-            <p>The given measure contains a key signature, please select the type. Multiple answers possible</p>
+            <h3>Key Recognition {{taskId}}</h3>
+            The given segment might contain a key signature. <br>
+            Select "No Signature" or select the correct type in case you recognise any, alongside the amount.<br>
         </div>
         <div class="task-items">
             <SliceViewer :task-type="state.selectedTask.taskType" :slice-file="state.selectedTask.filename"/>
