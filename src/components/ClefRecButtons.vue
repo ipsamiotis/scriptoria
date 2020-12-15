@@ -34,8 +34,6 @@ export default {
     setup (props, ctx) {
 
         const state = reactive({
-            trueText: "",
-            falseText: "",
             sliceLabels: [],
             btnToggleClass: "clef-btn",
             readyButton: "ready-btn__disabled"

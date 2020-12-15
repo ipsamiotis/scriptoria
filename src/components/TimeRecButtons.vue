@@ -1,13 +1,17 @@
 <template>
+    <link href="https://unpkg.com/primevue/resources/themes/saga-blue/theme.css " rel="stylesheet">
+    <link href="https://unpkg.com/primeicons/primeicons.css " rel="stylesheet">
     <div id="button-group">
-        <button id="btn-1" class="btn-toggle__inactive" @click="toggleButtons('no-clef', $event)">
+        <label for=""></label>
+        <button id="btn-1" class="btn-toggle__inactive" @click="toggleButtons('no-time', $event)">
             <div id="no-time">
-                No Time Signature
+                No signature
             </div>
         </button>
-        <input v-model.number="numerator" type="number">
-        /
-        <input v-model.number="denumerator" type="number">
+        <label for="nominator">Upper</label>
+        <input v-model.number="state.nominator" type="number" :disabled="state.disabledInput" style="width:3rem; height:3rem" :min="0" :max="79">
+        <label for="denominator">Lower</label>
+        <input v-model.number="state.denominator" type="number" :disabled="state.disabledInput" style="width:3rem; height:3rem" :min="0" :max="16">
     </div>
     <button :class="state.readyButton" @click="labelSlice(true)">
         Ready
@@ -15,9 +19,10 @@
 </template>
 
 <script>
-import {reactive} from "vue"
+import {reactive, watch} from "vue"
+
 export default {
-    name: "ClefRecButtons",
+    name: "TimeRecButtons",
     props: {
         taskType: {
             type: String,
@@ -25,42 +30,59 @@ export default {
             default: ""
         }
     },
+    components: {
+    },
     setup (props, ctx) {
 
         const state = reactive({
-            trueText: "",
-            falseText: "",
-            sliceLabels: [],
-            btnToggleClass: "clef-btn",
+            nominator: 0,
+            denominator: 0,
+            disabledInput: false,
+            sliceLabels: "",
             readyButton: "ready-btn__disabled"
         })
 
-        function toggleButtons(buttonLabel, event){
-            let button = event.currentTarget
+        watch(
+            () => [state.nominator, state.denominator],
+            ([nominator, denominator], [prevnominator, prevdenominator]) => {
+                if (nominator != prevnominator ) {
+                    toggleButtons(nominator)
+                } else if (denominator != prevdenominator) {
+                    toggleButtons(denominator)
+                }
+            }
+        )
 
-            if (button.id == "btn-1" && !state.sliceLabels.includes(button.className) && button.className != "btn-toggle__disabled" && button.className != "btn-toggle__active"){
-                console.log(state.sliceLabels)
-                state.sliceLabels.push(buttonLabel)
-                button.className = "btn-toggle__active"
-                state.readyButton = "ready-btn__active"
-                while(document.getElementsByClassName("btn-toggle__inactive").length > 0){
-                    document.getElementsByClassName("btn-toggle__inactive")[0].className = 'btn-toggle__disabled'
+        function toggleButtons(buttonLabel, event){
+            if (typeof event !== 'undefined') {
+                let button = event.currentTarget
+
+                if (button.id == "btn-1" && button.className == "btn-toggle__inactive"){
+                    state.sliceLabels = buttonLabel
+                    button.className = "btn-toggle__active"
+                    state.readyButton = "ready-btn__active"
+                    state.disabledInput = true
+                } else if (button.className == "btn-toggle__active" && state.sliceLabels.includes(buttonLabel)) {
+                    state.sliceLabels = ""
+                    button.className = "btn-toggle__inactive"
+                    if (document.getElementsByClassName("btn-toggle__active").length == 0) {
+                        state.readyButton = "ready-btn__disabled"
+                        state.disabledInput = false
+                    }
                 }
-                console.log(button.className)
-            } else if (button.id != "btn-1" && button.className != "btn-toggle__disabled" && button.className == "btn-toggle__inactive" && !state.sliceLabels.includes(buttonLabel)) {
-                state.sliceLabels.push(buttonLabel)
-                button.className = "btn-toggle__active"
-                document.getElementById("btn-1").className = "btn-toggle__disabled"
-                state.readyButton = "ready-btn__active"
-            } else if (button.className == "btn-toggle__active" && state.sliceLabels.includes(buttonLabel)) {
-                state.sliceLabels.splice(state.sliceLabels.indexOf(buttonLabel), 1)
-                button.className = "btn-toggle__inactive"
-                while(document.getElementsByClassName("btn-toggle__disabled").length > 0 //) {
-                && document.getElementsByClassName("btn-toggle__active").length == 0){
-                    document.getElementsByClassName("btn-toggle__disabled")[0].className = 'btn-toggle__inactive'
-                }
-                if (document.getElementsByClassName("btn-toggle__active").length == 0) {
+            } else {
+                if (buttonLabel != 0) {
+                    document.getElementById("btn-1").className = "btn-toggle__disabled"
+                    if (!["", 0].includes(state.nominator) && !["", 0].includes(state.denominator) && state.sliceLabels == "") {
+                        state.sliceLabels = `${state.nominator}/${state.denominator}`
+                        state.readyButton = "ready-btn__active"
+                    }
+                } else if (["", 0].includes(buttonLabel)) {
+                    state.sliceLabels = ""
                     state.readyButton = "ready-btn__disabled"
+                    if (["", 0].includes(state.nominator) && ["", 0].includes(state.denominator)) {
+                        document.getElementById("btn-1").className = "btn-toggle__inactive"
+                    }
                 }
             }
         }
@@ -74,10 +96,10 @@ export default {
 
         function refreshButtons() {
             document.getElementById("btn-1").className = "btn-toggle__inactive"
-            document.getElementById("btn-2").className = "btn-toggle__inactive"
-            document.getElementById("btn-3").className = "btn-toggle__inactive"
-            document.getElementById("btn-4").className = "btn-toggle__inactive"
-            state.sliceLabels = []
+            state.disabledInput = false
+            state.nominator = 0
+            state.denominator = 0
+            state.sliceLabels = ""
             state.readyButton = "ready-btn__disabled"
         }
 
@@ -97,20 +119,11 @@ export default {
         border: 1px solid #cb8132;
         border-radius: 20%;
         background-color: white;
-        height: 60px;
-        width: 55px;
+        line-height: 60px;
+        box-sizing: border-box;
         cursor: pointer;
         &:hover {
             transform: scale(1.1, 1.1);
-        }
-        #g-clef {
-            height: 30px;
-        }
-        #f-clef {
-            height: 30px;
-        }
-        #c-clef {
-            height: 30px;
         }
     }
     .btn-toggle__active {
@@ -118,20 +131,11 @@ export default {
         border: 2px solid #cb8132;
         border-radius: 20%;
         background-color: #eba147;
-        height: 60px;
-        width: 55px;
+        line-height: 60px;
+        box-sizing: border-box;
         cursor: pointer;
         &:hover {
             transform: scale(1.1, 1.1);
-        }
-        #g-clef {
-            height: 30px;
-        }
-        #f-clef {
-            height: 30px;
-        }
-        #c-clef {
-            height: 30px;
         }
     }
 
@@ -140,17 +144,8 @@ export default {
         border: 2px solid #c69a6b;
         background-color: #ededed;
         border-radius: 20%;
-        height: 60px;
-        width: 55px;
-        #g-clef {
-            height: 30px;
-        }
-        #f-clef {
-            height: 30px;
-        }
-        #c-clef {
-            height: 30px;
-        }
+        line-height: 60px;
+        box-sizing: border-box;
     }
 
     .ready-btn__active {
