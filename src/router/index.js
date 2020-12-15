@@ -19,7 +19,11 @@ const routes = [
     path: '/key_recognition/:taskId',
     name: 'KeyRecognition',
     component: () => import('@/views/KeyRecognition.vue')
-  }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    component: () => import('@/views/PageNotFound.vue')
+  },
 ]
 
 const router = createRouter({
