@@ -3,7 +3,7 @@
     <link href="https://unpkg.com/primeicons/primeicons.css " rel="stylesheet">
     <div id="button-group">
         <label for=""></label>
-        <button id="btn-1" class="btn-toggle__inactive" @click="toggleButtons('no-time', $event)">
+        <button id="btn-1" class="btn-toggle__inactive" @click="toggleButtons('', $event)">
             <div id="no-time">
                 No Signature
             </div>
@@ -13,13 +13,15 @@
         <label for="denominator">Lower</label>
         <input v-model.number="state.denominator" type="number" :disabled="state.disabledInput" style="width:3rem; height:3rem" :min="0" :max="16">
     </div>
-    <button :class="state.readyButton" @click="labelSlice(true)">
+    <button :class="state.readyButton" @click="labelSlice(state.sliceLabels)">
         {{state.readyBtnTxt}}
     </button>
 </template>
 
 <script>
 import {reactive, watch, onMounted} from "vue"
+
+import axios from 'axios'
 
 export default {
     name: "TimeRecButtons",
@@ -28,11 +30,16 @@ export default {
             type: String,
             required: true,
             default: ""
+        },
+        xml: {
+            type: String,
+            required: true,
+            default: ""
         }
     },
     components: {
     },
-    setup (props, ctx) {
+    setup (props) {
 
         const state = reactive({
             nominator: 0,
@@ -94,12 +101,33 @@ export default {
 
         function labelSlice(label){
             if (state.readyButton == "ready-btn__active") {
-                ctx.emit('need-slice', label, state.sliceLabels) // send the labels through API
+                let xmlSnippet = injectTime(label, props.xml)
+                axios.post(`http://localhost:443/${props.taskID}`, xmlSnippet)
+                    .then(response => this.labelId = response.data.id);
                 document.getElementById("btn-1").className = "btn-toggle__disabled"
                 state.disabledInput = true
                 state.readyBtnTxt = "Submitted"
                 state.readyButton = "ready-btn__submitted"
             }
+        }
+
+        function injectTime(clef, xmlString){
+            console.log(xmlString)
+            var parser = new DOMParser();
+            var xmlDoc = parser.parseFromString(xmlString, "text/xml");
+
+            if (clef != '') {
+                // find measure and append before
+                var elements = xmlDoc.getElementsByTagName("measure");
+                var node = document.insertBefore("scoreDef");
+                node.setAttribute("meter.count", state.nominator);
+                node.setAttribute("meter.unit", clef.denominator);
+                elements[0].appendChild(node)
+            }
+            var s = new XMLSerializer();
+            var newXmlStr = s.serializeToString(xmlDoc);
+
+            return newXmlStr
         }
 
         function refreshButtons() {

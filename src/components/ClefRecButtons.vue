@@ -48,11 +48,11 @@ export default {
             readyBtnTxt: "Ready",
             gClef: {
                 "shape": "G",
-                "line": "4"
+                "line": "2"
             },
             fClef: {
                 "shape": "F",
-                "line": "2"
+                "line": "4"
             },
             cClef:  {
                 "shape": "C",
@@ -92,12 +92,11 @@ export default {
             }
         }
 
-        function labelSlice(label){
+        function labelSlice(labels){
             if (state.readyButton == "ready-btn__active") {
-                let xmlSnippet = injectClef(label, props.xml)
+                let xmlSnippet = injectClef(labels, props.xml)
                 axios.post(`http://localhost:443/${props.taskID}`, xmlSnippet)
                     .then(response => this.labelId = response.data.id);
-                console.log(label)
                 document.getElementById("btn-1").className = "btn-toggle__disabled"
                 document.getElementById("btn-2").className = "btn-toggle__disabled"
                 document.getElementById("btn-3").className = "btn-toggle__disabled"
@@ -107,17 +106,19 @@ export default {
             }
         }
 
-        function injectClef(clef, xmlString){
+        function injectClef(clefs, xmlString){
             console.log(xmlString)
             var parser = new DOMParser();
             var xmlDoc = parser.parseFromString(xmlString, "text/xml");
 
-            if (clef != '') {
-                var elements = xmlDoc.getElementsByTagName("layer");
-                var node = document.createElement("clef");
-                node.setAttribute("shape", clef.shape);
-                node.setAttribute("line", clef.line);
-                elements[0].appendChild(node)
+            if (clefs != []) {
+                for (let clef in clefs) {
+                    var elements = xmlDoc.getElementsByTagName("layer");
+                    var node = document.createElement("clef");
+                    node.setAttribute("shape", clefs[clef].shape);
+                    node.setAttribute("line", clefs[clef].line);
+                    elements[0].appendChild(node)
+                }
             }
             var s = new XMLSerializer();
             var newXmlStr = s.serializeToString(xmlDoc);

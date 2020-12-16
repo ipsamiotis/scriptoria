@@ -9,7 +9,7 @@
             <SliceViewer :slice-file="state.selectedTask.image_path"/>
         </div>
         <div class="task-input">
-            <TimeRecButtons/>
+            <TimeRecButtons :taskID="state.sliceId" :xml="state.selectedTask.xml"/>
         </div>
     </div>
 </template>
@@ -36,7 +36,8 @@ export default {
 
 
         const state = reactive({
-            selectedTask: {}
+            selectedTask: {},
+            sliceId: ""
         })
 
         function getSlice(taskObj){
@@ -46,6 +47,7 @@ export default {
         onMounted(() => {
             axios.get(`http://localhost:443/tasks/${taskId.value}`)
                     .then(response => {
+                        state.sliceId = taskId.value
                         getSlice(response.data)
                         });
         })
