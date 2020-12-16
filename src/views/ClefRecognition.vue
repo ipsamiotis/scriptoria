@@ -1,7 +1,7 @@
 <template>
     <div class="task">
         <div class="task-header">
-            <h3>Clef Recognition {{taskId}}</h3>
+            <h3>Clef Recognition</h3>
             The given segment might contain a clef. <br>
             Select "No Clef" or the types of clef(s), in case you recognise any.<br>
             <strong> Ignore the starting ones!</strong>

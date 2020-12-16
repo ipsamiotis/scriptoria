@@ -1,7 +1,7 @@
 <template>
     <div class="task">
         <div class="task-header">
-            <h3>Key Recognition {{taskId}}</h3>
+            <h3>Key Recognition</h3>
             The given segment might contain a key signature. <br>
             Select "No Signature" or select the correct type in case you recognise any, alongside the amount.<br>
         </div>

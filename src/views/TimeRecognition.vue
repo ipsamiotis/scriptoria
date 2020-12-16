@@ -1,7 +1,7 @@
 <template>
     <div class="task">
         <div class="task-header">
-            <h3>Time Recognition {{taskId}}</h3>
+            <h3>Time Recognition</h3>
             The given segment might contain a time signature. <br>
             Select "No Signature" or input the correct numbers, in case you recognise any.<br>
         </div>
