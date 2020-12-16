@@ -2,16 +2,20 @@
     <link href="https://unpkg.com/primevue/resources/themes/saga-blue/theme.css " rel="stylesheet">
     <link href="https://unpkg.com/primeicons/primeicons.css " rel="stylesheet">
     <div id="button-group">
-        <label for=""></label>
-        <button id="btn-1" class="btn-toggle__inactive" @click="toggleButtons('no-time', $event)">
-            <div id="no-time">
-                No Signature
-            </div>
+        <button id="no-key" class="btn-toggle__inactive" @click="toggleButtons('no-key', $event)">
+            No Signature
         </button>
-        <label for="nominator">Upper</label>
-        <input v-model.number="state.nominator" type="number" :disabled="state.disabledInput" style="width:3rem; height:3rem" :min="0" :max="79">
-        <label for="denominator">Lower</label>
-        <input v-model.number="state.denominator" type="number" :disabled="state.disabledInput" style="width:3rem; height:3rem" :min="0" :max="16">
+        <button id="sharp" class="btn-toggle__inactive" @click="toggleButtons('sharp', $event)">
+            <img src="@/assets/icons/Sharp.svg">
+        </button>
+        <button id="flat" class="btn-toggle__inactive" @click="toggleButtons('flat', $event)">
+            <img src="@/assets/icons/Flat.png">
+        </button>
+        <button id="natural" class="btn-toggle__inactive" @click="toggleButtons('natural', $event)">
+            <img src="@/assets/icons/Natural_sign.png">
+        </button>
+        <label for="nominator">Amount</label>
+        <input v-model.number="state.amountElements" type="number" :disabled="state.disabledInput" style="width:3rem; height:3rem" :min="0" :max="79">
     </div>
     <button :class="state.readyButton" @click="labelSlice(true)">
         {{state.readyBtnTxt}}
@@ -35,8 +39,7 @@ export default {
     setup (props, ctx) {
 
         const state = reactive({
-            nominator: 0,
-            denominator: 0,
+            amountElements: 0,
             disabledInput: false,
             sliceLabels: "",
             readyButton: "ready-btn__disabled",
@@ -48,12 +51,10 @@ export default {
         })
 
         watch(
-            () => [state.nominator, state.denominator],
-            ([nominator, denominator], [prevnominator, prevdenominator]) => {
-                if (nominator != prevnominator ) {
-                    toggleButtons(nominator)
-                } else if (denominator != prevdenominator) {
-                    toggleButtons(denominator)
+            () => state.amountElements,
+            (amountElements, prevamountElements) => {
+                if (amountElements != prevamountElements ) {
+                    toggleButtons(amountElements)
                 }
             }
         )
@@ -62,14 +63,26 @@ export default {
             if (typeof event !== 'undefined') {
                 let button = event.currentTarget
 
-                if (button.id == "btn-1" && button.className == "btn-toggle__inactive"){
+                if (button.id == "no-key" && button.className == "btn-toggle__inactive"){
                     state.sliceLabels = buttonLabel
                     button.className = "btn-toggle__active"
                     state.readyButton = "ready-btn__active"
                     state.disabledInput = true
-                } else if (button.className == "btn-toggle__active" && state.sliceLabels.includes(buttonLabel)) {
+                    while(document.getElementsByClassName("btn-toggle__inactive").length > 0){
+                        document.getElementsByClassName("btn-toggle__inactive")[0].className = 'btn-toggle__disabled'
+                    }
+                } else if (button.id != "no-key" && button.className == "btn-toggle__inactive") {
+                    button.className = "btn-toggle__active"
+                    while(document.getElementsByClassName("btn-toggle__inactive").length > 0){
+                        document.getElementsByClassName("btn-toggle__inactive")[0].className = 'btn-toggle__disabled'
+                    }
+                } else if (button.className == "btn-toggle__active") {
                     state.sliceLabels = ""
                     button.className = "btn-toggle__inactive"
+                    while(document.getElementsByClassName("btn-toggle__disabled").length > 0
+                    && document.getElementsByClassName("btn-toggle__active").length == 0){
+                        document.getElementsByClassName("btn-toggle__disabled")[0].className = 'btn-toggle__inactive'
+                    }
                     if (document.getElementsByClassName("btn-toggle__active").length == 0) {
                         state.readyButton = "ready-btn__disabled"
                         state.disabledInput = false
@@ -77,16 +90,18 @@ export default {
                 }
             } else {
                 if (buttonLabel != 0) {
-                    document.getElementById("btn-1").className = "btn-toggle__disabled"
-                    if (!["", 0].includes(state.nominator) && !["", 0].includes(state.denominator) && state.sliceLabels == "") {
-                        state.sliceLabels = `${state.nominator}/${state.denominator}`
+                    if (!["", 0].includes(state.amountElements) && state.sliceLabels == "") {
+                        state.sliceLabels = `${state.amountElements}`
                         state.readyButton = "ready-btn__active"
                     }
                 } else if (["", 0].includes(buttonLabel)) {
                     state.sliceLabels = ""
                     state.readyButton = "ready-btn__disabled"
-                    if (["", 0].includes(state.nominator) && ["", 0].includes(state.denominator)) {
-                        document.getElementById("btn-1").className = "btn-toggle__inactive"
+                    if (["", 0].includes(state.amountElements)) {
+                        while(document.getElementsByClassName("btn-toggle__disabled").length > 0
+                        && document.getElementsByClassName("btn-toggle__active").length == 0){
+                            document.getElementsByClassName("btn-toggle__disabled")[0].className = 'btn-toggle__inactive'
+                        }
                     }
                 }
             }
@@ -95,7 +110,10 @@ export default {
         function labelSlice(label){
             if (state.readyButton == "ready-btn__active") {
                 ctx.emit('need-slice', label, state.sliceLabels) // send the labels through API
-                document.getElementById("btn-1").className = "btn-toggle__disabled"
+                document.getElementById("no-key").className = "btn-toggle__disabled"
+                document.getElementById("sharp").className = "btn-toggle__disabled"
+                document.getElementById("flat").className = "btn-toggle__disabled"
+                document.getElementById("natural").className = "btn-toggle__disabled"
                 state.disabledInput = true
                 state.readyBtnTxt = "Submitted"
                 state.readyButton = "ready-btn__submitted"
@@ -103,10 +121,12 @@ export default {
         }
 
         function refreshButtons() {
-            document.getElementById("btn-1").className = "btn-toggle__inactive"
+            document.getElementById("no-key").className = "btn-toggle__inactive"
+            document.getElementById("sharp").className = "btn-toggle__inactive"
+            document.getElementById("flat").className = "btn-toggle__inactive"
+            document.getElementById("natural").className = "btn-toggle__inactive"
             state.disabledInput = false
-            state.nominator = 0
-            state.denominator = 0
+            state.amountElements = 0
             state.sliceLabels = ""
             state.readyButton = "ready-btn__disabled"
         }
@@ -127,8 +147,6 @@ export default {
         border: 1px solid #cb8132;
         border-radius: 20%;
         background-color: white;
-        line-height: 60px;
-        box-sizing: border-box;
         cursor: pointer;
         &:hover {
             transform: scale(1.1, 1.1);
@@ -139,8 +157,6 @@ export default {
         border: 2px solid #cb8132;
         border-radius: 20%;
         background-color: #eba147;
-        line-height: 60px;
-        box-sizing: border-box;
         cursor: pointer;
         &:hover {
             transform: scale(1.1, 1.1);
@@ -152,6 +168,9 @@ export default {
         border: 2px solid #c69a6b;
         background-color: #ededed;
         border-radius: 20%;
+    }
+
+    #no-key {
         line-height: 60px;
         box-sizing: border-box;
     }

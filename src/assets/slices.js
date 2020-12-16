@@ -1,88 +1,88 @@
 export const tasks = [
     {
         "filename": "p1_m1.png",
-        "taskType": "clef_detection",
+        "taskType": "time_recognition",
         "taskID": 1,
         "taskContext": "xml"
     },
     {
         "filename": "p1_m2.png",
-        "taskType": "clef_detection",
+        "taskType": "time_recognition",
         "taskID": 2
     },
     {
         "filename": "p1_m3.png",
-        "taskType": "clef_detection",
+        "taskType": "time_recognition",
         "taskID": 3
     },
     {
         "filename": "p1_m4.png",
-        "taskType": "clef_detection",
+        "taskType": "time_recognition",
         "taskID": 4
     },
     {
         "filename": "p1_m5.png",
-        "taskType": "clef_detection",
+        "taskType": "time_recognition",
         "taskID": 5
     },
     {
         "filename": "p1_m6.png",
-        "taskType": "clef_detection",
+        "taskType": "time_recognition",
         "taskID": 6
     },
     {
         "filename": "p1_m7.png",
-        "taskType": "clef_detection",
+        "taskType": "time_recognition",
         "taskID": 7
     },
     {
         "filename": "p1_m8.png",
-        "taskType": "clef_detection",
+        "taskType": "time_recognition",
         "taskID": 7
     },
     {
         "filename": "p1_m9.png",
-        "taskType": "clef_detection",
+        "taskType": "time_recognition",
         "taskID": 8
     },
     {
         "filename": "p1_m10.png",
-        "taskType": "clef_detection",
+        "taskType": "time_recognition",
         "taskID": 9
     },
     {
         "filename": "p1_m11.png",
-        "taskType": "clef_detection",
+        "taskType": "time_recognition",
         "taskID": 10
     },
     {
         "filename": "p1_m12.png",
-        "taskType": "clef_detection",
+        "taskType": "time_recognition",
         "taskID": 11
     },
     {
         "filename": "p1_m13.png",
-        "taskType": "clef_detection",
+        "taskType": "time_recognition",
         "taskID": 12
     },
     {
         "filename": "p1_m14.png",
-        "taskType": "clef_detection",
+        "taskType": "time_recognition",
         "taskID": 13
     },
     {
         "filename": "p1_m15.png",
-        "taskType": "clef_detection",
+        "taskType": "time_recognition",
         "taskID": 14
     },
     {
         "filename": "p1_m16.png",
-        "taskType": "clef_detection",
+        "taskType": "time_recognition",
         "taskID": 15
     },
     {
         "filename": "p1_m17.png",
-        "taskType": "clef_detection",
+        "taskType": "time_recognition",
         "taskID": 16
     },
     {
@@ -139,29 +139,5 @@ export const tasks = [
         "filename": "p3_m69.png",
         "taskType": "clef_recognition",
         "taskID": 27
-    },
-    // {
-    //     "filename": "var2_m23-24.png",
-    //     "taskType": "verify_slice",
-    //     "mei_file": "var2_m23-24.mei",
-    //     "taskID": 28
-    // },
-    // {
-    //     "filename": "var3_m27.png",
-    //     "taskType": "verify_slice",
-    //     "mei_file": "var3_m27.mei",
-    //     "taskID": 29
-    // },
-    // {
-    //     "filename": "var3_m31.png",
-    //     "taskType": "verify_slice",
-    //     "mei_file": "var3_m31.mei",
-    //     "taskID": 30
-    // },
-    // {
-    //     "filename": "var4_m33-34-35.png",
-    //     "taskType": "verify_slice",
-    //     "mei_file": "var4_m33-34-35.mei",
-    //     "taskID": 31
-    // }
+    }
 ]
