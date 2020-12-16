@@ -4,6 +4,7 @@
 
 node_modules
 /dist
+src/assets/omr_files
 
 
 # local env files

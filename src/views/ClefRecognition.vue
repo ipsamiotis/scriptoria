@@ -7,10 +7,10 @@
             <strong> Ignore the starting ones!</strong>
         </div>
         <div class="task-items">
-            <SliceViewer :task-type="state.selectedTask.taskType" :slice-file="state.selectedTask.filename"/>
+            <SliceViewer :slice-file="state.selectedTask.image_path"/>
         </div>
         <div class="task-input">
-            <ClefRecButtons :task-type="state.selectedTask.taskType" @need-slice="getSlice"/>
+            <ClefRecButtons :taskID="state.sliceId" :xml="state.selectedTask.xml"/>
         </div>
     </div>
 </template>
@@ -37,29 +37,18 @@ export default {
 
         const state = reactive({
             selectedTask: {},
-            totalTasks: {}
+            sliceId: ""
         })
 
-
-
-        function getSlice(...args){
-            const [needSlice, label] = args
-            console.log(label)
-            if (needSlice) {
-                for (let task in state.totalTasks.tasks) {
-                    if (state.totalTasks.tasks[task]._id == taskId.value) {
-                        state.selectedTask = state.totalTasks.tasks[task]
-                    }
-                }
-                console.log(state.selectedTask)
-            }
+        function getSlice(taskObj){
+            state.selectedTask = taskObj
         }
 
         onMounted(() => {
-            axios.get("https://crowdmanager.eu/tasks")
+            axios.get(`http://localhost:443/tasks/${taskId.value}`)
                     .then(response => {
-                        state.totalTasks = response.data
-                        getSlice(true)
+                        state.sliceId = taskId.value
+                        getSlice(response.data)
                         });
         })
 
