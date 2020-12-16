@@ -2,16 +2,16 @@
     <link href="https://unpkg.com/primevue/resources/themes/saga-blue/theme.css " rel="stylesheet">
     <link href="https://unpkg.com/primeicons/primeicons.css " rel="stylesheet">
     <div id="button-group">
-        <button id="no-key" class="btn-toggle__inactive" @click="toggleButtons('no-key', $event)">
+        <button id="no-key" class="btn-toggle__inactive" @click="toggleButtons('', $event)">
             No Signature
         </button>
-        <button id="sharp" class="btn-toggle__inactive" @click="toggleButtons('sharp', $event)">
+        <button id="sharp" class="btn-toggle__inactive" @click="toggleButtons(state.sharp, $event)">
             <img src="@/assets/icons/Sharp.svg">
         </button>
-        <button id="flat" class="btn-toggle__inactive" @click="toggleButtons('flat', $event)">
+        <button id="flat" class="btn-toggle__inactive" @click="toggleButtons(state.flat, $event)">
             <img src="@/assets/icons/Flat.png">
         </button>
-        <button id="natural" class="btn-toggle__inactive" @click="toggleButtons('natural', $event)">
+        <button id="natural" class="btn-toggle__inactive" @click="toggleButtons(state.natural, $event)">
             <img src="@/assets/icons/Natural_sign.png">
         </button>
         <label for="nominator">Amount</label>
@@ -25,10 +25,17 @@
 <script>
 import {reactive, watch, onMounted} from "vue"
 
+import axios from 'axios'
+
 export default {
-    name: "TimeRecButtons",
+    name: "KeyRecButtons",
     props: {
         taskID: {
+            type: String,
+            required: true,
+            default: ""
+        },
+        xml: {
             type: String,
             required: true,
             default: ""
@@ -36,14 +43,17 @@ export default {
     },
     components: {
     },
-    setup (props, ctx) {
+    setup (props) {
 
         const state = reactive({
             amountElements: 0,
             disabledInput: false,
             sliceLabels: "",
             readyButton: "ready-btn__disabled",
-            readyBtnTxt: "Ready"
+            readyBtnTxt: "Ready",
+            sharp: "s",
+            flat: "f",
+            natural: "0"
         })
 
         onMounted(() => {
@@ -109,7 +119,9 @@ export default {
 
         function labelSlice(label){
             if (state.readyButton == "ready-btn__active") {
-                ctx.emit('need-slice', label, state.sliceLabels) // send the labels through API
+                let xmlSnippet = injectKey(label, props.xml)
+                axios.post(`http://localhost:443/${props.taskID}`, xmlSnippet)
+                    .then(response => this.labelId = response.data.id);
                 document.getElementById("no-key").className = "btn-toggle__disabled"
                 document.getElementById("sharp").className = "btn-toggle__disabled"
                 document.getElementById("flat").className = "btn-toggle__disabled"
@@ -118,6 +130,29 @@ export default {
                 state.readyBtnTxt = "Submitted"
                 state.readyButton = "ready-btn__submitted"
             }
+        }
+
+        function injectKey(key, xmlString){
+            console.log(xmlString)
+            var parser = new DOMParser();
+            var xmlDoc = parser.parseFromString(xmlString, "text/xml");
+
+            if (key != '') {
+                // find measure and append before
+                var elements = xmlDoc.getElementsByTagName("measure");
+                var node = xmlDoc.createElement("scoreDef");
+                if (key == "0") {
+                    node.setAttribute("key.sig.show", "true")
+                    node.setAttribute("key.sig", "0");
+                } else {
+                    node.setAttribute("key.sig", `${state.nominator.toString()}${key}`);
+                }
+                xmlDoc.documentElement.insertBefore(node, elements[0]);
+            }
+            var s = new XMLSerializer();
+            var newXmlStr = s.serializeToString(xmlDoc);
+
+            return newXmlStr
         }
 
         function refreshButtons() {

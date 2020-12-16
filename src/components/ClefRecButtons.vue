@@ -57,7 +57,7 @@ export default {
             cClef:  {
                 "shape": "C",
                 "line": "3"
-            },
+            }
         })
 
         onMounted(() => {

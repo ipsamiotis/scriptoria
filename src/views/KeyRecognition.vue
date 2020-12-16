@@ -9,7 +9,7 @@
             <SliceViewer :slice-file="state.selectedTask.image_path"/>
         </div>
         <div class="task-input">
-            <KeyRecButtons/>
+            <KeyRecButtons :taskID="state.sliceId" :xml="state.selectedTask.xml"/>
         </div>
     </div>
 </template>
@@ -46,6 +46,7 @@ export default {
         onMounted(() => {
             axios.get(`http://localhost:443/tasks/${taskId.value}`)
                     .then(response => {
+                        state.sliceId = taskId.value
                         getSlice(response.data)
                         });
         })
