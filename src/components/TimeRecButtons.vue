@@ -14,12 +14,12 @@
         <input v-model.number="state.denominator" type="number" :disabled="state.disabledInput" style="width:3rem; height:3rem" :min="0" :max="16">
     </div>
     <button :class="state.readyButton" @click="labelSlice(true)">
-        Ready
+        {{state.readyBtnTxt}}
     </button>
 </template>
 
 <script>
-import {reactive, watch} from "vue"
+import {reactive, watch, onMounted} from "vue"
 
 export default {
     name: "TimeRecButtons",
@@ -39,7 +39,12 @@ export default {
             denominator: 0,
             disabledInput: false,
             sliceLabels: "",
-            readyButton: "ready-btn__disabled"
+            readyButton: "ready-btn__disabled",
+            readyBtnTxt: "Ready"
+        })
+
+        onMounted(() => {
+            refreshButtons()
         })
 
         watch(
@@ -89,8 +94,11 @@ export default {
 
         function labelSlice(label){
             if (state.readyButton == "ready-btn__active") {
-                ctx.emit('need-slice', label, state.sliceLabels)
-                refreshButtons()
+                ctx.emit('need-slice', label, state.sliceLabels) // send the labels through API
+                document.getElementById("btn-1").className = "btn-toggle__disabled"
+                state.disabledInput = true
+                state.readyBtnTxt = "Submitted"
+                state.readyButton = "ready-btn__submitted"
             }
         }
 
@@ -168,6 +176,18 @@ export default {
         border: 2px solid #c69a6b;
         // border-radius: 8%;
         background-color: #e8c498;
+        height: 40px;
+        width: 180px;
+        font-weight: bold;
+        color: white;
+        font-size: 11pt;
+    }
+
+    .ready-btn__submitted {
+        margin-top: 6px;
+        border: 2px solid #aefcd7;
+        // border-radius: 8%;
+        background-color: #79e66f;
         height: 40px;
         width: 180px;
         font-weight: bold;

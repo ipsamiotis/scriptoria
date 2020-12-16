@@ -14,7 +14,7 @@ export default {
             errorMsg: "HOW DID THEY REACH THIS??"
         })
         // send something through the API?
-        console.log(state.errorMsg)
+        console.log(state.errorMsg, Date.now())
 
         return {
             state
