@@ -4,7 +4,6 @@
             <h3>Clef Recognition</h3>
             The given segment might contain a clef. <br>
             Select "No Clef" or the types of clef(s), in case you recognise any.<br>
-            <strong> Ignore the starting ones!</strong>
         </div>
         <div class="task-items">
             <SliceViewer :slice-file="state.selectedTask.image_path"/>

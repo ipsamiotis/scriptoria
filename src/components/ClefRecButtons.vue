@@ -111,7 +111,7 @@ export default {
             var parser = new DOMParser();
             var xmlDoc = parser.parseFromString(xmlString, "text/xml");
 
-            if (clefs != []) {
+            if (!clefs.includes('')) {
                 for (let clef in clefs) {
                     var elements = xmlDoc.getElementsByTagName("layer");
                     var node = document.createElement("clef");

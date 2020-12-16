@@ -28,7 +28,7 @@ import {reactive, watch, onMounted} from "vue"
 export default {
     name: "TimeRecButtons",
     props: {
-        taskType: {
+        taskID: {
             type: String,
             required: true,
             default: ""

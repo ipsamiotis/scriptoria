@@ -34,7 +34,6 @@ export default {
         const route = useRoute();
         const taskId = computed(() => route.params.taskId)
 
-
         const state = reactive({
             selectedTask: {},
             sliceId: ""

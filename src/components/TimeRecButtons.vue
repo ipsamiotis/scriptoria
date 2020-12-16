@@ -26,7 +26,7 @@ import axios from 'axios'
 export default {
     name: "TimeRecButtons",
     props: {
-        taskType: {
+        taskID: {
             type: String,
             required: true,
             default: ""
@@ -74,7 +74,7 @@ export default {
                     button.className = "btn-toggle__active"
                     state.readyButton = "ready-btn__active"
                     state.disabledInput = true
-                } else if (button.className == "btn-toggle__active" && state.sliceLabels.includes(buttonLabel)) {
+                } else if (button.className == "btn-toggle__active" && state.sliceLabels == buttonLabel) {
                     state.sliceLabels = ""
                     button.className = "btn-toggle__inactive"
                     if (document.getElementsByClassName("btn-toggle__active").length == 0) {
@@ -100,6 +100,7 @@ export default {
         }
 
         function labelSlice(label){
+            console.log(props.taskID)
             if (state.readyButton == "ready-btn__active") {
                 let xmlSnippet = injectTime(label, props.xml)
                 axios.post(`http://localhost:443/${props.taskID}`, xmlSnippet)
@@ -111,18 +112,18 @@ export default {
             }
         }
 
-        function injectTime(clef, xmlString){
+        function injectTime(time, xmlString){
             console.log(xmlString)
             var parser = new DOMParser();
             var xmlDoc = parser.parseFromString(xmlString, "text/xml");
 
-            if (clef != '') {
+            if (time != '') {
                 // find measure and append before
                 var elements = xmlDoc.getElementsByTagName("measure");
-                var node = document.insertBefore("scoreDef");
-                node.setAttribute("meter.count", state.nominator);
-                node.setAttribute("meter.unit", clef.denominator);
-                elements[0].appendChild(node)
+                var node = xmlDoc.createElement("scoreDef");
+                node.setAttribute("meter.count", state.nominator.toString());
+                node.setAttribute("meter.unit", state.denominator.toString());
+                xmlDoc.documentElement.insertBefore(node, elements[0]);
             }
             var s = new XMLSerializer();
             var newXmlStr = s.serializeToString(xmlDoc);
