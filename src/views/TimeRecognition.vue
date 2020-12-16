@@ -18,10 +18,10 @@
 import {reactive, onMounted, computed} from "vue"
 import {useRoute} from 'vue-router';
 
+import axios from 'axios'
+
 import SliceViewer from "@/components/SliceViewer"
 import TimeRecButtons from "@/components/TimeRecButtons"
-
-import {tasks} from "@/assets/slices"
 
 export default {
     name: "TimeRecognition",
@@ -42,19 +42,22 @@ export default {
         function getSlice(...args){
             const [needSlice, label] = args
             console.log(label)
-            // console.log(taskId.value)
             if (needSlice) {
-                for (let task in tasks) {
-                    // If (taskId) fetchTaskFromApi(taskId) -> for tasksIDs from backend
-                    if (tasks[task].taskID == taskId.value) {
-                        state.selectedTask = tasks[task]
+                for (let task in state.totalTasks.tasks) {
+                    if (state.totalTasks.tasks[task]._id == taskId.value) {
+                        state.selectedTask = state.totalTasks.tasks[task]
                     }
                 }
+                console.log(state.selectedTask)
             }
         }
 
         onMounted(() => {
-            getSlice(true)
+            axios.get("https://crowdmanager.eu/tasks")
+                    .then(response => {
+                        state.totalTasks = response.data
+                        getSlice(true)
+                        });
         })
 
         return {
