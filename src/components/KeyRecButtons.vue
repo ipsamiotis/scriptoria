@@ -14,10 +14,10 @@
         <button id="natural" class="btn-toggle__inactive" @click="toggleButtons(state.natural, $event)">
             <img src="@/assets/icons/Natural_sign.png">
         </button>
-        <label for="nominator">Amount</label>
+        <label for="amountElements">Amount</label>
         <input v-model.number="state.amountElements" type="number" :disabled="state.disabledInput" style="width:3rem; height:3rem" :min="0" :max="79">
     </div>
-    <button :class="state.readyButton" @click="labelSlice(true)">
+    <button :class="state.readyButton" @click="labelSlice(state.sliceLabels)">
         {{state.readyBtnTxt}}
     </button>
 </template>
@@ -70,6 +70,7 @@ export default {
         )
 
         function toggleButtons(buttonLabel, event){
+            console.log(buttonLabel)
             if (typeof event !== 'undefined') {
                 let button = event.currentTarget
 
@@ -82,6 +83,7 @@ export default {
                         document.getElementsByClassName("btn-toggle__inactive")[0].className = 'btn-toggle__disabled'
                     }
                 } else if (button.id != "no-key" && button.className == "btn-toggle__inactive") {
+                    state.sliceLabels = buttonLabel
                     button.className = "btn-toggle__active"
                     while(document.getElementsByClassName("btn-toggle__inactive").length > 0){
                         document.getElementsByClassName("btn-toggle__inactive")[0].className = 'btn-toggle__disabled'
@@ -100,8 +102,8 @@ export default {
                 }
             } else {
                 if (buttonLabel != 0) {
-                    if (!["", 0].includes(state.amountElements) && state.sliceLabels == "") {
-                        state.sliceLabels = `${state.amountElements}`
+                    if (!["", 0].includes(state.amountElements) && state.sliceLabels != "") {
+                        // state.sliceLabels = `${state.amountElements}`
                         state.readyButton = "ready-btn__active"
                     }
                 } else if (["", 0].includes(buttonLabel)) {
@@ -140,14 +142,26 @@ export default {
             if (key != '') {
                 // find measure and append before
                 var elements = xmlDoc.getElementsByTagName("measure");
-                var node = xmlDoc.createElement("scoreDef");
-                if (key == "0") {
-                    node.setAttribute("key.sig.show", "true")
-                    node.setAttribute("key.sig", "0");
+                var node = xmlDoc.getElementsByTagName("scoreDef");
+                if (node == '') {
+                    node = xmlDoc.createElement("scoreDef"); // create new scoreDef ONLY IF there is no pre-existing one
+                    if (key == "0") {
+                        node[0].setAttribute("key.sig.show", "true")
+                        node[0].setAttribute("key.sig", "0");
+                    } else {
+                        node[0].setAttribute("key.sig.show", "true")
+                        node[0].setAttribute("key.sig", `${state.amountElements.toString()}${key}`);
+                    }
+                    xmlDoc.documentElement.insertBefore(node, elements[0]);
                 } else {
-                    node.setAttribute("key.sig", `${state.nominator.toString()}${key}`);
+                    if (key == "0") {
+                        node[0].setAttribute("key.sig.show", "true")
+                        node[0].setAttribute("key.sig", "0");
+                    } else {
+                        node[0].setAttribute("key.sig.show", "true")
+                        node[0].setAttribute("key.sig", `${state.amountElements.toString()}${key}`);
+                    }
                 }
-                xmlDoc.documentElement.insertBefore(node, elements[0]);
             }
             var s = new XMLSerializer();
             var newXmlStr = s.serializeToString(xmlDoc);
