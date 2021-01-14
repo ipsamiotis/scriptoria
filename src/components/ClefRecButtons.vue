@@ -1,9 +1,7 @@
 <template>
     <div id="button-group">
         <button id="btn-1" class="btn-toggle__inactive" @click="toggleButtons('', $event)">
-            <div id="no-clef">
-                No Clef
-            </div>
+            No Clef
         </button>
         <button id="btn-2" class="btn-toggle__inactive" @click="toggleButtons(state.gClef, $event)">
             <img id="g-clef" src="@/assets/icons/G-clef.svg">
@@ -158,13 +156,13 @@ export default {
             transform: scale(1.1, 1.1);
         }
         #g-clef {
-            height: 30px;
+            height: 25px;
         }
         #f-clef {
-            height: 30px;
+            height: 25px;
         }
         #c-clef {
-            height: 30px;
+            height: 25px;
         }
     }
     .btn-toggle__active {
@@ -179,13 +177,13 @@ export default {
             transform: scale(1.1, 1.1);
         }
         #g-clef {
-            height: 30px;
+            height: 25px;
         }
         #f-clef {
-            height: 30px;
+            height: 25px;
         }
         #c-clef {
-            height: 30px;
+            height: 25px;
         }
     }
 
@@ -197,13 +195,13 @@ export default {
         height: 60px;
         width: 55px;
         #g-clef {
-            height: 30px;
+            height: 25px;
         }
         #f-clef {
-            height: 30px;
+            height: 25px;
         }
         #c-clef {
-            height: 30px;
+            height: 25px;
         }
     }
 
@@ -225,7 +223,6 @@ export default {
     .ready-btn__disabled {
         margin-top: 6px;
         border: 2px solid #c69a6b;
-        // border-radius: 8%;
         background-color: #e8c498;
         height: 40px;
         width: 180px;
@@ -237,7 +234,6 @@ export default {
     .ready-btn__submitted {
         margin-top: 6px;
         border: 2px solid #aefcd7;
-        // border-radius: 8%;
         background-color: #79e66f;
         height: 40px;
         width: 180px;
