@@ -8,10 +8,16 @@
                 No Signature
             </div>
         </button>
+        <button id="btn-2" class="btn-toggle__inactive" @click="toggleButtons(state.commontime, $event)">
+            <img id="common" src="@/assets/icons/common_time.svg">
+        </button>
+        <button id="btn-3" class="btn-toggle__inactive" @click="toggleButtons(state.cutcommontime, $event)">
+            <img id="cut" src="@/assets/icons/cut_time.svg" alt="">
+        </button>
         <label for="nominator">Upper</label>
-        <input v-model.number="state.nominator" type="number" :disabled="state.disabledInput" style="width:3rem; height:3rem" :min="0" :max="79">
+        <input v-model.number="state.nominator" type="number" :disabled="state.disabledInput" style="width:3rem; height:2rem" :min="0" :max="79">
         <label for="denominator">Lower</label>
-        <input v-model.number="state.denominator" type="number" :disabled="state.disabledInput" style="width:3rem; height:3rem" :min="0" :max="16">
+        <input v-model.number="state.denominator" type="number" :disabled="state.disabledInput" style="width:3rem; height:2rem" :min="0" :max="16">
     </div>
     <button :class="state.readyButton" @click="labelSlice(state.sliceLabels)">
         {{state.readyBtnTxt}}
@@ -47,7 +53,9 @@ export default {
             disabledInput: false,
             sliceLabels: "",
             readyButton: "ready-btn__disabled",
-            readyBtnTxt: "Ready"
+            readyBtnTxt: "Ready",
+            commontime: "common",
+            cutcommontime: "cut"
         })
 
         onMounted(() => {
@@ -69,14 +77,20 @@ export default {
             if (typeof event !== 'undefined') {
                 let button = event.currentTarget
 
-                if (button.id == "btn-1" && button.className == "btn-toggle__inactive"){
+                if (button.className == "btn-toggle__inactive"){
                     state.sliceLabels = buttonLabel
                     button.className = "btn-toggle__active"
                     state.readyButton = "ready-btn__active"
                     state.disabledInput = true
+                    while(document.getElementsByClassName("btn-toggle__inactive").length > 0){
+                        document.getElementsByClassName("btn-toggle__inactive")[0].className = 'btn-toggle__disabled'
+                    }
                 } else if (button.className == "btn-toggle__active" && state.sliceLabels == buttonLabel) {
                     state.sliceLabels = ""
                     button.className = "btn-toggle__inactive"
+                    while(document.getElementsByClassName("btn-toggle__disabled").length > 0 && document.getElementsByClassName("btn-toggle__active").length == 0){
+                        document.getElementsByClassName("btn-toggle__disabled")[0].className = 'btn-toggle__inactive'
+                    }
                     if (document.getElementsByClassName("btn-toggle__active").length == 0) {
                         state.readyButton = "ready-btn__disabled"
                         state.disabledInput = false
@@ -85,6 +99,8 @@ export default {
             } else {
                 if (buttonLabel != 0) {
                     document.getElementById("btn-1").className = "btn-toggle__disabled"
+                    document.getElementById("btn-2").className = "btn-toggle__disabled"
+                    document.getElementById("btn-3").className = "btn-toggle__disabled"
                     if (!["", 0].includes(state.nominator) && !["", 0].includes(state.denominator) && state.sliceLabels == "") {
                         state.sliceLabels = `${state.nominator}/${state.denominator}`
                         state.readyButton = "ready-btn__active"
@@ -94,6 +110,8 @@ export default {
                     state.readyButton = "ready-btn__disabled"
                     if (["", 0].includes(state.nominator) && ["", 0].includes(state.denominator)) {
                         document.getElementById("btn-1").className = "btn-toggle__inactive"
+                        document.getElementById("btn-2").className = "btn-toggle__inactive"
+                        document.getElementById("btn-3").className = "btn-toggle__inactive"
                     }
                 }
             }
@@ -106,6 +124,8 @@ export default {
                 axios.post(`http://localhost:443/${props.taskID}`, xmlSnippet)
                     .then(response => this.labelId = response.data.id);
                 document.getElementById("btn-1").className = "btn-toggle__disabled"
+                document.getElementById("btn-2").className = "btn-toggle__disabled"
+                document.getElementById("btn-3").className = "btn-toggle__disabled"
                 state.disabledInput = true
                 state.readyBtnTxt = "Submitted"
                 state.readyButton = "ready-btn__submitted"
@@ -121,8 +141,12 @@ export default {
                 // find measure and append before
                 var elements = xmlDoc.getElementsByTagName("measure");
                 var node = xmlDoc.createElement("scoreDef");
-                node.setAttribute("meter.count", state.nominator.toString());
-                node.setAttribute("meter.unit", state.denominator.toString());
+                if (state.nominator != 0 || state.denominator.toString() != 0) {
+                    node.setAttribute("meter.count", state.nominator.toString());
+                    node.setAttribute("meter.unit", state.denominator.toString());
+                } else {
+                    node.setAttribute("meter.sym", state.sliceLabels);
+                }
                 xmlDoc.documentElement.insertBefore(node, elements[0]);
             }
             var s = new XMLSerializer();
@@ -183,6 +207,16 @@ export default {
         border-radius: 20%;
         line-height: 60px;
         box-sizing: border-box;
+    }
+
+    #common {
+        height: 30px;
+        display: block;
+    }
+
+    #cut {
+        height: 30px;
+        display: block;
     }
 
     .ready-btn__active {
