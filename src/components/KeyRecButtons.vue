@@ -11,9 +11,9 @@
         <button id="flat" class="btn-toggle__inactive" @click="toggleButtons(state.flat, $event)">
             <img src="@/assets/icons/Flat.png">
         </button>
-        <button id="natural" class="btn-toggle__inactive" @click="toggleButtons(state.natural, $event)">
+        <!-- <button id="natural" class="btn-toggle__inactive" @click="toggleButtons(state.natural, $event)">
             <img src="@/assets/icons/Natural_sign.png">
-        </button>
+        </button> -->
         <label for="amountElements">Amount</label>
         <input v-model.number="state.amountElements" type="number" :disabled="state.disabledInput" style="width:3rem; height:3rem" :min="0" :max="79">
     </div>
@@ -127,7 +127,7 @@ export default {
                 document.getElementById("no-key").className = "btn-toggle__disabled"
                 document.getElementById("sharp").className = "btn-toggle__disabled"
                 document.getElementById("flat").className = "btn-toggle__disabled"
-                document.getElementById("natural").className = "btn-toggle__disabled"
+                // document.getElementById("natural").className = "btn-toggle__disabled"
                 state.disabledInput = true
                 state.readyBtnTxt = "Submitted"
                 state.readyButton = "ready-btn__submitted"
@@ -173,7 +173,7 @@ export default {
             document.getElementById("no-key").className = "btn-toggle__inactive"
             document.getElementById("sharp").className = "btn-toggle__inactive"
             document.getElementById("flat").className = "btn-toggle__inactive"
-            document.getElementById("natural").className = "btn-toggle__inactive"
+            // document.getElementById("natural").className = "btn-toggle__inactive"
             state.disabledInput = false
             state.amountElements = 0
             state.sliceLabels = ""
