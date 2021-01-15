@@ -1,5 +1,5 @@
 <template>
-    <img v-if="taskType" :src="require(`@/assets/${taskType}/${sliceFile}`)">
+    <img v-if="sliceFile" :src="require(`@/assets${sliceFile}`)">
     <!-- sliceType: measures, lines, pages -> @/assets/omr_files/slices/sliceType/sliceFile -->
 </template>
 
@@ -7,12 +7,6 @@
 export default {
     name: "SliceViewer",
     props: {
-        taskType: {
-            type: String,
-            require: true,
-            default: ""
-
-        },
         sliceFile: {
             type: String,
             required: true,

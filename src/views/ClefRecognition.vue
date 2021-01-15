@@ -4,13 +4,12 @@
             <h3>Clef Recognition</h3>
             The given segment might contain a clef. <br>
             Select "No Clef" or the types of clef(s), in case you recognise any.<br>
-            <strong> Ignore the starting ones!</strong>
         </div>
         <div class="task-items">
-            <SliceViewer :task-type="state.selectedTask.taskType" :slice-file="state.selectedTask.filename"/>
+            <SliceViewer :slice-file="state.selectedTask.image_path"/>
         </div>
         <div class="task-input">
-            <ClefRecButtons :task-type="state.selectedTask.taskType" @need-slice="getSlice"/>
+            <ClefRecButtons :taskID="state.sliceId" :xml="state.selectedTask.xml"/>
         </div>
     </div>
 </template>
@@ -19,10 +18,10 @@
 import {reactive, onMounted, computed} from "vue"
 import {useRoute} from 'vue-router';
 
+import axios from 'axios'
+
 import SliceViewer from "@/components/SliceViewer"
 import ClefRecButtons from "@/components/ClefRecButtons"
-
-import {tasks} from "@/assets/slices"
 
 export default {
     name: "ClefRecognition",
@@ -36,25 +35,20 @@ export default {
         const taskId = computed(() => route.params.taskId)
 
         const state = reactive({
-            selectedTask: {}
+            selectedTask: {},
+            sliceId: ""
         })
 
-        function getSlice(...args){
-            const [needSlice, label] = args
-            console.log(label)
-            // console.log(taskId.value)
-            if (needSlice) {
-                for (let task in tasks) {
-                    // If (taskId) fetchTaskFromApi(taskId) -> for tasksIDs from backend
-                    if (tasks[task].taskID == taskId.value) {
-                        state.selectedTask = tasks[task]
-                    }
-                }
-            }
+        function getSlice(taskObj){
+            state.selectedTask = taskObj
         }
 
         onMounted(() => {
-            getSlice(true)
+            axios.get(`http://localhost:443/tasks/${taskId.value}`)
+                    .then(response => {
+                        state.sliceId = taskId.value
+                        getSlice(response.data)
+                        });
         })
 
         return {
