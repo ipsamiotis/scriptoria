@@ -2,22 +2,22 @@
     <link href="https://unpkg.com/primevue/resources/themes/saga-blue/theme.css " rel="stylesheet">
     <link href="https://unpkg.com/primeicons/primeicons.css " rel="stylesheet">
     <div id="button-group">
-        <button id="no-key" class="btn-toggle__inactive" @click="toggleButtons('', $event)">
+        <button id="no-key" class="btn-toggle__inactive" @click="toggleButtons('no-key', $event)">
             No Signature
         </button>
-        <button id="sharp" class="btn-toggle__inactive" @click="toggleButtons(state.sharp, $event)">
+        <button id="sharp" class="btn-toggle__inactive" @click="toggleButtons('sharp', $event)">
             <img src="@/assets/icons/Sharp.svg">
         </button>
-        <button id="flat" class="btn-toggle__inactive" @click="toggleButtons(state.flat, $event)">
+        <button id="flat" class="btn-toggle__inactive" @click="toggleButtons('flat', $event)">
             <img src="@/assets/icons/Flat.png">
         </button>
-        <!-- <button id="natural" class="btn-toggle__inactive" @click="toggleButtons(state.natural, $event)">
+        <button id="natural" class="btn-toggle__inactive" @click="toggleButtons('natural', $event)">
             <img src="@/assets/icons/Natural_sign.png">
-        </button> -->
-        <label for="amountElements">Amount</label>
+        </button>
+        <label for="nominator">Amount</label>
         <input v-model.number="state.amountElements" type="number" :disabled="state.disabledInput" style="width:3rem; height:3rem" :min="0" :max="79">
     </div>
-    <button :class="state.readyButton" @click="labelSlice(state.sliceLabels)">
+    <button :class="state.readyButton" @click="labelSlice(true)">
         {{state.readyBtnTxt}}
     </button>
 </template>
@@ -25,17 +25,10 @@
 <script>
 import {reactive, watch, onMounted} from "vue"
 
-import axios from 'axios'
-
 export default {
-    name: "KeyRecButtons",
+    name: "TimeRecButtons",
     props: {
-        taskID: {
-            type: String,
-            required: true,
-            default: ""
-        },
-        xml: {
+        taskType: {
             type: String,
             required: true,
             default: ""
@@ -43,17 +36,14 @@ export default {
     },
     components: {
     },
-    setup (props) {
+    setup (props, ctx) {
 
         const state = reactive({
             amountElements: 0,
             disabledInput: false,
             sliceLabels: "",
             readyButton: "ready-btn__disabled",
-            readyBtnTxt: "Ready",
-            sharp: "s",
-            flat: "f",
-            natural: "0"
+            readyBtnTxt: "Ready"
         })
 
         onMounted(() => {
@@ -70,7 +60,6 @@ export default {
         )
 
         function toggleButtons(buttonLabel, event){
-            console.log(buttonLabel)
             if (typeof event !== 'undefined') {
                 let button = event.currentTarget
 
@@ -83,7 +72,6 @@ export default {
                         document.getElementsByClassName("btn-toggle__inactive")[0].className = 'btn-toggle__disabled'
                     }
                 } else if (button.id != "no-key" && button.className == "btn-toggle__inactive") {
-                    state.sliceLabels = buttonLabel
                     button.className = "btn-toggle__active"
                     while(document.getElementsByClassName("btn-toggle__inactive").length > 0){
                         document.getElementsByClassName("btn-toggle__inactive")[0].className = 'btn-toggle__disabled'
@@ -102,8 +90,8 @@ export default {
                 }
             } else {
                 if (buttonLabel != 0) {
-                    if (!["", 0].includes(state.amountElements) && state.sliceLabels != "") {
-                        // state.sliceLabels = `${state.amountElements}`
+                    if (!["", 0].includes(state.amountElements) && state.sliceLabels == "") {
+                        state.sliceLabels = `${state.amountElements}`
                         state.readyButton = "ready-btn__active"
                     }
                 } else if (["", 0].includes(buttonLabel)) {
@@ -121,59 +109,22 @@ export default {
 
         function labelSlice(label){
             if (state.readyButton == "ready-btn__active") {
-                let xmlSnippet = injectKey(label, props.xml)
-                axios.post(`http://localhost:443/${props.taskID}`, xmlSnippet)
-                    .then(response => this.labelId = response.data.id);
+                ctx.emit('need-slice', label, state.sliceLabels) // send the labels through API
                 document.getElementById("no-key").className = "btn-toggle__disabled"
                 document.getElementById("sharp").className = "btn-toggle__disabled"
                 document.getElementById("flat").className = "btn-toggle__disabled"
-                // document.getElementById("natural").className = "btn-toggle__disabled"
+                document.getElementById("natural").className = "btn-toggle__disabled"
                 state.disabledInput = true
                 state.readyBtnTxt = "Submitted"
                 state.readyButton = "ready-btn__submitted"
             }
         }
 
-        function injectKey(key, xmlString){
-            console.log(xmlString)
-            var parser = new DOMParser();
-            var xmlDoc = parser.parseFromString(xmlString, "text/xml");
-
-            if (key != '') {
-                // find measure and append before
-                var elements = xmlDoc.getElementsByTagName("measure");
-                var node = xmlDoc.getElementsByTagName("scoreDef");
-                if (node == '') {
-                    node = xmlDoc.createElement("scoreDef"); // create new scoreDef ONLY IF there is no pre-existing one
-                    if (key == "0") {
-                        node[0].setAttribute("key.sig.show", "true")
-                        node[0].setAttribute("key.sig", "0");
-                    } else {
-                        node[0].setAttribute("key.sig.show", "true")
-                        node[0].setAttribute("key.sig", `${state.amountElements.toString()}${key}`);
-                    }
-                    xmlDoc.documentElement.insertBefore(node, elements[0]);
-                } else {
-                    if (key == "0") {
-                        node[0].setAttribute("key.sig.show", "true")
-                        node[0].setAttribute("key.sig", "0");
-                    } else {
-                        node[0].setAttribute("key.sig.show", "true")
-                        node[0].setAttribute("key.sig", `${state.amountElements.toString()}${key}`);
-                    }
-                }
-            }
-            var s = new XMLSerializer();
-            var newXmlStr = s.serializeToString(xmlDoc);
-
-            return newXmlStr
-        }
-
         function refreshButtons() {
             document.getElementById("no-key").className = "btn-toggle__inactive"
             document.getElementById("sharp").className = "btn-toggle__inactive"
             document.getElementById("flat").className = "btn-toggle__inactive"
-            // document.getElementById("natural").className = "btn-toggle__inactive"
+            document.getElementById("natural").className = "btn-toggle__inactive"
             state.disabledInput = false
             state.amountElements = 0
             state.sliceLabels = ""

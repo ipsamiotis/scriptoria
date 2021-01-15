@@ -1,8 +1,7 @@
 <template>
     <div>
         <strong>
-            Something went wrong. <br>
-            Please reload the page.
+            Something went horribly wrong
         </strong>
     </div>
 </template>

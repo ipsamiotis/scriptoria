@@ -6,10 +6,10 @@
             Select "No Signature" or select the correct type in case you recognise any, alongside the amount.<br>
         </div>
         <div class="task-items">
-            <SliceViewer :slice-file="state.selectedTask.image_path"/>
+            <SliceViewer :task-type="state.selectedTask.taskType" :slice-file="state.selectedTask.filename"/>
         </div>
         <div class="task-input">
-            <KeyRecButtons :taskID="state.sliceId" :xml="state.selectedTask.xml"/>
+            <KeyRecButtons :task-type="state.selectedTask.taskType" @need-slice="getSlice"/>
         </div>
     </div>
 </template>
@@ -18,10 +18,10 @@
 import {reactive, onMounted, computed} from "vue"
 import {useRoute} from 'vue-router';
 
-import axios from 'axios'
-
 import SliceViewer from "@/components/SliceViewer"
 import KeyRecButtons from "@/components/KeyRecButtons"
+
+import {tasks} from "@/assets/slices"
 
 export default {
     name: "KeyRecognition",
@@ -39,16 +39,22 @@ export default {
             selectedTask: {}
         })
 
-        function getSlice(taskObj){
-            state.selectedTask = taskObj
+        function getSlice(...args){
+            const [needSlice, label] = args
+            console.log(label)
+            // console.log(taskId.value)
+            if (needSlice) {
+                for (let task in tasks) {
+                    // If (taskId) fetchTaskFromApi(taskId) -> for tasksIDs from backend
+                    if (tasks[task].taskID == taskId.value) {
+                        state.selectedTask = tasks[task]
+                    }
+                }
+            }
         }
 
         onMounted(() => {
-            axios.get(`http://localhost:443/tasks/${taskId.value}`)
-                    .then(response => {
-                        state.sliceId = taskId.value
-                        getSlice(response.data)
-                        });
+            getSlice(true)
         })
 
         return {

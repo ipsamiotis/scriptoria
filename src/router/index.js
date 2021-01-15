@@ -2,12 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    path: '/0_clef_recognition/edit/:taskId',
+    path: '/clef_recognition/edit/:taskId',
     name: 'ClefRecognition',
     component: () => import('@/views/ClefRecognition.vue')
   },
   {
-    path: '/1_time_recognition/edit/:taskId',
+    path: '/time_recognition/edit/:taskId',
     name: 'TimeRecognition',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -16,7 +16,7 @@ const routes = [
     component: () => import('@/views/TimeRecognition.vue')
   },
   {
-    path: '/2_key_recognition/edit/:taskId',
+    path: '/key_recognition/edit/:taskId',
     name: 'KeyRecognition',
     component: () => import('@/views/KeyRecognition.vue')
   },
