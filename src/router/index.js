@@ -21,6 +21,11 @@ const routes = [
     component: () => import('@/views/KeyRecognition.vue')
   },
   {
+    path: '/3_note_position/edit/:taskId',
+    name: 'NotePosition',
+    component: () => import('@/views/NotePosition.vue')
+  },
+  {
     path: '/:pathMatch(.*)*',
     component: () => import('@/views/PageNotFound.vue')
   },
