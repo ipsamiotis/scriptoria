@@ -13,7 +13,7 @@
                 <SliceViewer :slice-file="state.selectedTask.image_path"/>
             </div>
             <div class="mei-viewer">
-                <SliceViewer :slice-file="state.selectedTask.image_path"/>
+                <VerovioLoader />
                 <ClefRecButtons :taskID="state.sliceId" :xml="state.selectedTask.xml"/>
             </div>
         </div>
@@ -25,13 +25,16 @@ import {reactive, onMounted, computed} from "vue"
 import {useRoute} from 'vue-router';
 
 import axios from 'axios'
+// import verovio from 'verovio'
 
 import SliceViewer from "@/components/SliceViewer"
+import VerovioLoader from "@/components/VerovioLoader"
 
 export default {
     name: "NotePosition",
     components: {
-        SliceViewer
+        SliceViewer,
+        VerovioLoader
     },
 
     setup () {
