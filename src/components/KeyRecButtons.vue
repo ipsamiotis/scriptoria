@@ -143,24 +143,30 @@ export default {
                 // find measure and append before
                 var elements = xmlDoc.getElementsByTagName("measure");
                 var node = xmlDoc.getElementsByTagName("scoreDef");
-                if (node == '') {
+                if (node.length == 0) {
                     node = xmlDoc.createElement("scoreDef"); // create new scoreDef ONLY IF there is no pre-existing one
-                    if (key == "0") {
-                        node[0].setAttribute("key.sig.show", "true")
-                        node[0].setAttribute("key.sig", "0");
-                    } else {
-                        node[0].setAttribute("key.sig.show", "true")
-                        node[0].setAttribute("key.sig", `${state.amountElements.toString()}${key}`);
-                    }
+                    node.setAttribute("key.sig.show", "true")
+                    node.setAttribute("key.sig", `${state.amountElements.toString()}${key}`);
+                    // Support for natural key signatures below
+                    // if (key == "0") {
+                    //     node.setAttribute("key.sig.show", "true")
+                    //     node.setAttribute("key.sig", "0");
+                    // } else {
+                    //     node.setAttribute("key.sig.show", "true")
+                    //     node.setAttribute("key.sig", `${state.amountElements.toString()}${key}`);
+                    // }
                     xmlDoc.documentElement.insertBefore(node, elements[0]);
                 } else {
-                    if (key == "0") {
-                        node[0].setAttribute("key.sig.show", "true")
-                        node[0].setAttribute("key.sig", "0");
-                    } else {
-                        node[0].setAttribute("key.sig.show", "true")
-                        node[0].setAttribute("key.sig", `${state.amountElements.toString()}${key}`);
-                    }
+                    console.log(node)
+                    node.setAttribute("key.sig.show", "true")
+                    node.setAttribute("key.sig", `${state.amountElements.toString()}${key}`);
+                    // if (key == "0") {
+                    //     node.setAttribute("key.sig.show", "true")
+                    //     node.setAttribute("key.sig", "0");
+                    // } else {
+                    //     node.setAttribute("key.sig.show", "true")
+                    //     node.setAttribute("key.sig", `${state.amountElements.toString()}${key}`);
+                    // }
                 }
             }
             var s = new XMLSerializer();
