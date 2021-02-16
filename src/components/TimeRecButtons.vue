@@ -19,8 +19,8 @@
         <label for="denominator">Lower</label>
         <input v-model.number="state.denominator" type="number" :disabled="state.disabledInput" style="width:3rem; height:2rem" :min="0" :max="16">
     </div>
-    <button :class="state.readyButton" @click="labelSlice(state.sliceLabels)">
-        {{state.readyBtnTxt}}
+    <button :class="state.confirmButton" @click="labelSlice(state.sliceLabels)">
+        {{state.confirmBtnTxt}}
     </button>
 </template>
 
@@ -52,8 +52,8 @@ export default {
             denominator: 0,
             disabledInput: false,
             sliceLabels: "",
-            readyButton: "ready-btn__disabled",
-            readyBtnTxt: "Ready",
+            confirmButton: "confirm-btn__disabled",
+            confirmBtnTxt: "Confirm",
             commontime: "common",
             cutcommontime: "cut"
         })
@@ -80,7 +80,7 @@ export default {
                 if (button.className == "btn-toggle__inactive"){
                     state.sliceLabels = buttonLabel
                     button.className = "btn-toggle__active"
-                    state.readyButton = "ready-btn__active"
+                    state.confirmButton = "confirm-btn__active"
                     state.disabledInput = true
                     while(document.getElementsByClassName("btn-toggle__inactive").length > 0){
                         document.getElementsByClassName("btn-toggle__inactive")[0].className = 'btn-toggle__disabled'
@@ -92,7 +92,7 @@ export default {
                         document.getElementsByClassName("btn-toggle__disabled")[0].className = 'btn-toggle__inactive'
                     }
                     if (document.getElementsByClassName("btn-toggle__active").length == 0) {
-                        state.readyButton = "ready-btn__disabled"
+                        state.confirmButton = "confirm-btn__disabled"
                         state.disabledInput = false
                     }
                 }
@@ -103,11 +103,11 @@ export default {
                     document.getElementById("btn-3").className = "btn-toggle__disabled"
                     if (!["", 0].includes(state.nominator) && !["", 0].includes(state.denominator) && state.sliceLabels == "") {
                         state.sliceLabels = `${state.nominator}/${state.denominator}`
-                        state.readyButton = "ready-btn__active"
+                        state.confirmButton = "confirm-btn__active"
                     }
                 } else if (["", 0].includes(buttonLabel)) {
                     state.sliceLabels = ""
-                    state.readyButton = "ready-btn__disabled"
+                    state.confirmButton = "confirm-btn__disabled"
                     if (["", 0].includes(state.nominator) && ["", 0].includes(state.denominator)) {
                         document.getElementById("btn-1").className = "btn-toggle__inactive"
                         document.getElementById("btn-2").className = "btn-toggle__inactive"
@@ -119,7 +119,7 @@ export default {
 
         function labelSlice(label){
             console.log(props.taskID)
-            if (state.readyButton == "ready-btn__active") {
+            if (state.confirmButton == "confirm-btn__active") {
                 let xmlSnippet = injectTime(label, props.xml)
                 axios.post(`http://localhost:443/${props.taskID}`, xmlSnippet)
                     .then(response => this.labelId = response.data.id);
@@ -127,8 +127,8 @@ export default {
                 document.getElementById("btn-2").className = "btn-toggle__disabled"
                 document.getElementById("btn-3").className = "btn-toggle__disabled"
                 state.disabledInput = true
-                state.readyBtnTxt = "Submitted"
-                state.readyButton = "ready-btn__submitted"
+                state.confirmBtnTxt = "Submitted"
+                state.confirmButton = "confirm-btn__submitted"
             }
         }
 
@@ -161,7 +161,7 @@ export default {
             state.nominator = 0
             state.denominator = 0
             state.sliceLabels = ""
-            state.readyButton = "ready-btn__disabled"
+            state.confirmButton = "confirm-btn__disabled"
         }
 
         return {
@@ -219,7 +219,7 @@ export default {
         display: block;
     }
 
-    .ready-btn__active {
+    .confirm-btn__active {
         margin-top: 6px;
         border: 2px solid #cb8132;
         background-color: #eba147;
@@ -234,7 +234,7 @@ export default {
         }
     }
 
-    .ready-btn__disabled {
+    .confirm-btn__disabled {
         margin-top: 6px;
         border: 2px solid #c69a6b;
         // border-radius: 8%;
@@ -246,7 +246,7 @@ export default {
         font-size: 11pt;
     }
 
-    .ready-btn__submitted {
+    .confirm-btn__submitted {
         margin-top: 6px;
         border: 2px solid #aefcd7;
         // border-radius: 8%;
