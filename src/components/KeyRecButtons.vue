@@ -158,8 +158,8 @@ export default {
                     xmlDoc.documentElement.insertBefore(node, elements[0]);
                 } else {
                     console.log(node)
-                    node.setAttribute("key.sig.show", "true")
-                    node.setAttribute("key.sig", `${state.amountElements.toString()}${key}`);
+                    node[0].setAttribute("key.sig.show", "true")
+                    node[0].setAttribute("key.sig", `${state.amountElements.toString()}${key}`);
                     // if (key == "0") {
                     //     node.setAttribute("key.sig.show", "true")
                     //     node.setAttribute("key.sig", "0");

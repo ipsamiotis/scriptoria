@@ -14,7 +14,7 @@ export default {
             required: true,
             default: ""
         },
-        initialSnippet: {
+        measureSnippet: {
             type: String,
             required: true,
             default: `<section><measure label="41" n="41" xml:id="measure_80f64356-6e27-4a3b-a4d2-286d551012ad"><staff facs="#zone_8bfc7fe1-c5d5-44f0-a850-8e6193e75e77" label="6" n="6" xml:id="staff_8d881556-70dd-40c9-a476-ec5d03553a9e"><layer><clef xmlns="http://www.w3.org/1999/xhtml" shape="G" line="2"></clef></layer></staff></measure></section>`
@@ -30,8 +30,8 @@ export default {
         const state = reactive({
             svg: '',
             options: {
-                pageHeight: 2970,
-                pageWidth: 2100,
+                pageHeight: 900,
+                pageWidth: 300,
                 adjustPageHeight: true
             }
         })
@@ -41,7 +41,7 @@ export default {
                 let vrvToolkit = new verovio.toolkit();
                 vrvToolkit.setOptions(state.options)
 
-                let mei = props.context.replaceAll("<PUT_TASK_XML_HERE/>", props.initialSnippet)
+                let mei = props.context.replaceAll("<PUT_TASK_XML_HERE/>", props.measureSnippet)
                 console.log(mei)
 
                 vrvToolkit.loadData(mei);
