@@ -38,7 +38,7 @@ export default {
                 let vrvToolkit = new verovio.toolkit();
                 vrvToolkit.setOptions(state.options)
                 let mei = props.context.replaceAll("<PUT_TASK_XML_HERE/>", props.measureSnippet)
-                console.log(mei)
+                // console.log(mei)
                 vrvToolkit.loadData(mei);
                 state.svg = vrvToolkit.renderToSVG(1, {});
             }

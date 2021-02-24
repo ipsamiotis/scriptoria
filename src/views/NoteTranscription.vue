@@ -3,15 +3,15 @@
         <div class="task-header">
             <h3>Note Transcription</h3>
             The given segment to the left might contain notes and rests. <br>
-            Use the buttons "Note" and "Rest" to represent the sequence of notes you see.<br><br>
-            Example: note,note,note,note -OR- rest,note,note <br><br>
+            Use:<br>
+            - The slider to control the duration of the music element<br>
+            - The toggle to add a dot<br>
+            - The "Note" or "Rest" buttons to add the music element<br>
+            When you have input all the elements, select "Completed Sequence"<br><br>
         </div>
         <div class="task-viewports">
             <div class="img-viewer">
                 <SliceViewer :slice-file="state.selectedTask.image_path"/>
-            </div>
-            <div class="mei-viewer">
-                <VerovioLoader/>
             </div>
             <div class="btn-group">
                 <AddNoteButtons :taskID="state.sliceId" :xml="state.selectedTask.xml"/>
@@ -27,14 +27,12 @@ import {useRoute} from 'vue-router';
 import axios from 'axios'
 
 import SliceViewer from "@/components/SliceViewer"
-import VerovioLoader from "@/components/VerovioLoader"
 import AddNoteButtons from "@/components/AddNoteButtons"
 
 export default {
     name: "NoteTranscription",
     components: {
         SliceViewer,
-        VerovioLoader,
         AddNoteButtons
     },
 
@@ -72,16 +70,16 @@ export default {
 .task-viewports {
     // border: 3px solid rgb(0, 0, 0);
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     grid-gap: 20px;
     .img-viewer {
         align-self: center;
         justify-self: center;
     }
-    .mei-viewer {
-        align-self: center;
-        justify-self: center;
-    }
+    // .mei-viewer {
+    //     align-self: center;
+    //     justify-self: center;
+    // }
     .btn-group {
         align-self: center;
         justify-self: center;
