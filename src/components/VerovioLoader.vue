@@ -1,5 +1,7 @@
 <template>
-    <div v-html="state.svg"/>
+    <div id="svg-viewer">
+        <div v-html="state.svg" :key="state.currentMei"/>
+    </div>
 </template>
 
 <script>
@@ -27,9 +29,10 @@ export default {
     setup (props) {
         const state = reactive({
             svg: '',
+            currentMei: '',
             options: {
-                pageHeight: 900,
-                pageWidth: 300,
+                pageHeight: 1100,
+                pageWidth: 400,
                 adjustPageHeight: true
             }
         })
@@ -38,11 +41,12 @@ export default {
                 let vrvToolkit = new verovio.toolkit();
                 vrvToolkit.setOptions(state.options)
                 let mei = props.context.replaceAll("<PUT_TASK_XML_HERE/>", props.measureSnippet)
-                // console.log(mei)
+                console.log(mei)
                 vrvToolkit.loadData(mei);
                 state.svg = vrvToolkit.renderToSVG(1, {});
             }
         })
+
         return {
             state
         }
@@ -51,4 +55,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    #svg-viewer {
+        border-radius: 5px;
+        border: 5px solid #DFE3E8;
+        box-sizing: border-box;
+    }
+    [v-cloak] + .loader::before {
+        content: "Loading…"
+    }
 </style>
