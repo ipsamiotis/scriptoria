@@ -13,8 +13,8 @@
             <img id="c-clef" src="@/assets/icons/CClef.svg" alt="">
         </button>
     </div>
-    <button :class="state.readyButton" @click="labelSlice(state.sliceLabels)">
-        {{state.readyBtnTxt}}
+    <button :class="state.confirmButton" @click="labelSlice(state.sliceLabels)">
+        {{state.confirmBtnTxt}}
     </button>
 </template>
 
@@ -42,8 +42,8 @@ export default {
         const state = reactive({
             sliceLabels: [],
             btnToggleClass: "clef-btn",
-            readyButton: "ready-btn__disabled",
-            readyBtnTxt: "Ready",
+            confirmButton: "confirm-btn__disabled",
+            confirmBtnTxt: "Confirm",
             gClef: {
                 "shape": "G",
                 "line": "2"
@@ -68,7 +68,7 @@ export default {
             if (button.id == "btn-1" && !state.sliceLabels.includes(button.className) && button.className != "btn-toggle__disabled" && button.className != "btn-toggle__active"){
                 state.sliceLabels.push(buttonLabel)
                 button.className = "btn-toggle__active"
-                state.readyButton = "ready-btn__active"
+                state.confirmButton = "confirm-btn__active"
                 while(document.getElementsByClassName("btn-toggle__inactive").length > 0){
                     document.getElementsByClassName("btn-toggle__inactive")[0].className = 'btn-toggle__disabled'
                 }
@@ -76,7 +76,7 @@ export default {
                 state.sliceLabels.push(buttonLabel)
                 button.className = "btn-toggle__active"
                 document.getElementById("btn-1").className = "btn-toggle__disabled"
-                state.readyButton = "ready-btn__active"
+                state.confirmButton = "confirm-btn__active"
             } else if (button.className == "btn-toggle__active" && state.sliceLabels.includes(buttonLabel)) {
                 state.sliceLabels.splice(state.sliceLabels.indexOf(buttonLabel), 1)
                 button.className = "btn-toggle__inactive"
@@ -85,13 +85,13 @@ export default {
                     document.getElementsByClassName("btn-toggle__disabled")[0].className = 'btn-toggle__inactive'
                 }
                 if (document.getElementsByClassName("btn-toggle__active").length == 0) {
-                    state.readyButton = "ready-btn__disabled"
+                    state.confirmButton = "confirm-btn__disabled"
                 }
             }
         }
 
         function labelSlice(labels){
-            if (state.readyButton == "ready-btn__active") {
+            if (state.confirmButton == "confirm-btn__active") {
                 let xmlSnippet = injectClef(labels, props.xml)
                 axios.post(`http://localhost:443/${props.taskID}`, xmlSnippet)
                     .then(response => this.labelId = response.data.id);
@@ -99,8 +99,8 @@ export default {
                 document.getElementById("btn-2").className = "btn-toggle__disabled"
                 document.getElementById("btn-3").className = "btn-toggle__disabled"
                 document.getElementById("btn-4").className = "btn-toggle__disabled"
-                state.readyBtnTxt = "Submitted"
-                state.readyButton = "ready-btn__submitted"
+                state.confirmBtnTxt = "Submitted"
+                state.confirmButton = "confirm-btn__submitted"
             }
         }
 
@@ -130,7 +130,7 @@ export default {
             document.getElementById("btn-3").className = "btn-toggle__inactive"
             document.getElementById("btn-4").className = "btn-toggle__inactive"
             state.sliceLabels = []
-            state.readyButton = "ready-btn__disabled"
+            state.confirmButton = "confirm-btn__disabled"
         }
 
         return {
@@ -205,7 +205,7 @@ export default {
         }
     }
 
-    .ready-btn__active {
+    .confirm-btn__active {
         margin-top: 6px;
         border: 2px solid #cb8132;
         background-color: #eba147;
@@ -220,7 +220,7 @@ export default {
         }
     }
 
-    .ready-btn__disabled {
+    .confirm-btn__disabled {
         margin-top: 6px;
         border: 2px solid #c69a6b;
         background-color: #e8c498;
@@ -231,7 +231,7 @@ export default {
         font-size: 11pt;
     }
 
-    .ready-btn__submitted {
+    .confirm-btn__submitted {
         margin-top: 6px;
         border: 2px solid #aefcd7;
         background-color: #79e66f;
