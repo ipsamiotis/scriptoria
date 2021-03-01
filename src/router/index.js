@@ -21,6 +21,16 @@ const routes = [
     component: () => import('@/views/KeyRecognition.vue')
   },
   {
+    path: '/3_note_transcription/edit/:taskId',
+    name: 'NoteTranscription',
+    component: () => import('@/views/NoteTranscription.vue')
+  },
+  {
+    path: '/4_note_pitch/edit/:taskId',
+    name: 'NotePitch',
+    component: () => import('@/views/NotePitch.vue')
+  },
+  {
     path: '/:pathMatch(.*)*',
     component: () => import('@/views/PageNotFound.vue')
   },
