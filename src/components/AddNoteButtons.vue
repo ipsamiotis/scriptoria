@@ -51,7 +51,8 @@ export default {
             default: ""
         }
     },
-    setup (props) {
+    emits: ['svg-updated'],
+    setup (props, ctx) {
 
         const state = reactive({
             sliceElements: [],
@@ -99,6 +100,7 @@ export default {
                 if (state.blockedPanel == false){
                     state.blockedPanel = true
                     let xmlSnippet = injectElementsToXML()
+                    ctx.emit('svg-updated', xmlSnippet)
                     axios.post(`http://localhost:443/${props.taskID}`, xmlSnippet)
                         .then(response => this.labelId = response.data.id);
                 } else {

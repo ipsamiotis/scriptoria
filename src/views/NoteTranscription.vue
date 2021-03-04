@@ -13,8 +13,9 @@
             <div class="img-viewer">
                 <SliceViewer :slice-file="state.selectedTask.image_path"/>
             </div>
-            <div class="btn-group">
-                <AddNoteButtons :taskID="state.sliceId" :xml="state.selectedTask.xml"/>
+          <VerovioLoader :context="state.selectedTask.context" :measure-snippet="state.snippet"/>
+          <div class="btn-group">
+                <AddNoteButtons @svg-updated="svgUpdated" :taskID="state.sliceId" :xml="state.selectedTask.xml"/>
             </div>
         </div>
     </div>
@@ -28,10 +29,12 @@ import axios from 'axios'
 
 import SliceViewer from "@/components/SliceViewer"
 import AddNoteButtons from "@/components/AddNoteButtons"
+import VerovioLoader from "@/components/VerovioLoader";
 
 export default {
     name: "NoteTranscription",
     components: {
+      VerovioLoader,
         SliceViewer,
         AddNoteButtons
     },
@@ -42,8 +45,13 @@ export default {
 
         const state = reactive({
             selectedTask: {},
-            sliceId: ""
+            sliceId: "",
+            snippet: '<section><measure label="41" n="41" xml:id="measure_80f64356-6e27-4a3b-a4d2-286d551012ad"><staff facs="#zone_8bfc7fe1-c5d5-44f0-a850-8e6193e75e77" label="6" n="6" xml:id="staff_8d881556-70dd-40c9-a476-ec5d03553a9e"><layer><clef xmlns="http://www.w3.org/1999/xhtml" shape="G" line="2"></clef></layer></staff></measure></section>',
         })
+
+        function svgUpdated(svg) {
+          state.snippet = svg;
+        }
 
         function getSlice(taskObj){
             state.selectedTask = taskObj
@@ -60,6 +68,7 @@ export default {
         return {
             state,
             getSlice,
+            svgUpdated,
             taskId
         }
     }
