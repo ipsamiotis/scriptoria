@@ -93,6 +93,8 @@ export default {
                     state.sliderMsg = true
                 }
             }
+            let xmlSnippet = injectElementsToXML()
+            ctx.emit('svg-updated', xmlSnippet)
         }
 
         function blockAndSubmit() {
