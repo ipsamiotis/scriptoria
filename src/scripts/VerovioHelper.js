@@ -1,5 +1,8 @@
 import verovio from 'verovio'
 
+/**
+ * Simple class to help us reuse toolkit instances.
+ */
 export class VerovioHelper {
     static options = {
         pageHeight: 1100,

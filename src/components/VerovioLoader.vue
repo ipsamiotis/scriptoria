@@ -26,6 +26,9 @@ export default {
     },
   },
   methods: {
+    /**
+     * A method instead of computed as the toolkit is not reactive.
+     */
     svg() {
       return VerovioHelper.getSvgFromMei(this.mei);
     }
