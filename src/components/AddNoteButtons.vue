@@ -44,6 +44,8 @@ import {VerovioHelper} from "@/scripts/VerovioHelper";
 
 export default {
   name: "AddNoteButtons",
+  emits: ['svgUpdated'],
+
   components: {
     Slider,
     InputSwitch,
@@ -82,7 +84,6 @@ export default {
       return this.canSubmit ? 'Completed Sequence' : 'Please add an element'
     },
   },
-  emits: ['svg-updated'],
 
   methods: {
     numElements(type) {
