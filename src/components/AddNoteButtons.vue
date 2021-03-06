@@ -16,10 +16,10 @@
         <InputSwitch v-model="state.dotButton"/>
       </div>
       <div class="note-rest">
-        <Button id="noteBtn" type="button" label="Note" :badge="numNotes"
+        <Button id="noteBtn" type="button" label="Note" :badge="numElements('note')"
                 class="p-button-outlined p-button-secondary" @click="addNote()"
                 :disabled="!isSliderValid"/>
-        <Button id="restBtn" type="button" label="Rest" :badge="numRests"
+        <Button id="restBtn" type="button" label="Rest" :badge="numElements('rest')"
                 class="p-button-outlined p-button-secondary" @click="addRest()"
                 :disabled="!isSliderValid"/>
       </div>
@@ -35,14 +35,16 @@
 <script>
 import {reactive} from "vue"
 
-// import axios from 'axios'
+import axios from 'axios'
 
 import Slider from 'primevue/slider';
 import InputSwitch from 'primevue/inputswitch';
 import Button from 'primevue/button';
 import InlineMessage from 'primevue/inlinemessage';
 import BlockUI from 'primevue/blockui';
-import {MeiBuilder} from "@/scripts/MeiBuilder";
+import {NoteElement} from "@/scripts/data/NoteElement";
+import {RestElement} from "@/scripts/data/RestElement";
+import {VerovioHelper} from "@/scripts/VerovioHelper";
 
 export default {
   name: "AddNoteButtons",
@@ -69,55 +71,33 @@ export default {
     isSliderValid() {
       return this.state.sliderValue !== 0;
     },
-    numNotes() {
-      return this.state.sliceElements.filter(element => {
-        return element.includes('<note');
-      }).length.toString() ?? '0';
-    },
-    numRests() {
-      return this.state.sliceElements.filter(element => {
-        return element.includes('<rest');
-      }).length.toString() ?? '0';
-    }
   },
   emits: ['svg-updated'],
 
   methods: {
+    numElements(type) {
+      return this.state.sliceElements.filter(element => {
+        return element.type === type;
+      }).length.toString() ?? '0';
+    },
     addNote() {
-      let note = MeiBuilder.createNote(this.state.adjustedSliderValue[this.state.sliderValue - 1], this.state.dotButton);
+      let note = new NoteElement(this.state.adjustedSliderValue[this.state.sliderValue - 1], this.state.dotButton);
       this.state.sliceElements.push(note)
       this.resetForm();
-      this.$emit('svg-updated', this.injectElementsToXML())
+      this.$emit('svg-updated', VerovioHelper.getXmlFromElements(this.xml, this.state.sliceElements))
     },
     addRest() {
-      let rest = MeiBuilder.createRest(this.state.adjustedSliderValue[this.state.sliderValue - 1], this.state.dotButton);
+      let rest = new RestElement(this.state.adjustedSliderValue[this.state.sliderValue - 1], this.state.dotButton);
       this.state.sliceElements.push(rest)
       this.resetForm();
-      this.$emit('svg-updated', this.injectElementsToXML())
+      this.$emit('svg-updated', VerovioHelper.getXmlFromElements(this.xml, this.state.sliceElements))
     },
     resetForm() {
       this.state.sliderValue = 0
       this.state.dotButton = false
     },
-    injectElementsToXML() {
-      var parser = new DOMParser();
-      var xmlDoc = parser.parseFromString(this.xml, "text/xml");
-      var layer = xmlDoc.getElementsByTagName("layer");
-
-      for (let element in this.state.sliceElements) {
-        let element_xml = document.createRange().createContextualFragment(this.state.sliceElements[element]);
-        console.log(element_xml)
-
-        layer[0].appendChild(element_xml)
-      }
-      var s = new XMLSerializer();
-      var newXmlStr = s.serializeToString(xmlDoc);
-      console.log(newXmlStr)
-
-      return newXmlStr
-    }
   },
-  setup() {
+  setup(props, ctx) {
 
     const state = reactive({
       sliceElements: [],
@@ -125,8 +105,6 @@ export default {
       noteDurations: ['', '1/32', '1/16', '1/8', '1/4', '1/2', '1'],
       adjustedSliderValue: [32, 16, 8, 4, 2, 1],
       dotButton: false,
-      numNotes: 0,
-      numRests: 0,
       noteMsg: false,
       blockedPanel: false
     })
@@ -136,10 +114,11 @@ export default {
       if (state.sliceElements.length !== 0) {
         if (state.blockedPanel === false) {
           state.blockedPanel = true
-          // let xmlSnippet = injectElementsToXML()
-          // ctx.emit('svg-updated', xmlSnippet)
-          // axios.post(`http://localhost:443/${props.taskID}`, xmlSnippet)
-          //     .then(response => this.labelId = response.data.id);
+          let xmlSnippet = VerovioHelper.getXmlFromElements(this.xml, this.state.sliceElements)
+
+          ctx.emit('svg-updated', xmlSnippet)
+          axios.post(`http://localhost:443/${props.taskID}`, xmlSnippet)
+              .then(response => this.labelId = response.data.id);
         } else {
           state.blockedPanel = false
         }
