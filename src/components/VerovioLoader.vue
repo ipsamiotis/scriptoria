@@ -11,11 +11,6 @@ import {reactive, onBeforeMount, watch} from 'vue';
 export default {
   name: "VerovioLoader",
   props: {
-    taskID: {
-      type: String,
-      required: true,
-      default: ""
-    },
     measureSnippet: {
       type: String,
       required: true,
