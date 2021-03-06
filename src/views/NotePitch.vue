@@ -53,6 +53,7 @@ export default {
     })
 
     function svgUpdated(svg) {
+      console.log("note pitch")
       state.snippet = svg;
     }
 
