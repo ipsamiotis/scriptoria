@@ -22,13 +22,12 @@
                 class="p-button-outlined p-button-secondary" @click="addRest()"
                 :disabled="!isSliderValid"/>
       </div>
-      <InlineMessage v-if="noteMsg && sliceElements.length === 0" severity="warn">Please add an element
-      </InlineMessage>
+
     </div>
   </BlockUI>
-  <Button id="submitButton" type="button" label="Completed Sequence"
+  <Button id="submitButton" type="button" :label="submitLabel"
           :icon="blockedPanel ? 'pi pi-check-circle' : 'pi pi-circle-off'"
-          @click="submit(sliceElements)"/>
+          @click="submit(sliceElements)" :disabled="!canSubmit"/>
 </template>
 
 <script>
@@ -59,7 +58,6 @@ export default {
       noteDurations: ['', '1/32', '1/16', '1/8', '1/4', '1/2', '1'],
       adjustedSliderValue: [32, 16, 8, 4, 2, 1],
       dotButton: false,
-      noteMsg: false,
       blockedPanel: false
     }
   },
@@ -76,6 +74,12 @@ export default {
   computed: {
     isSliderValid() {
       return this.sliderValue !== 0;
+    },
+    canSubmit() {
+      return this.sliceElements.length > 0;
+    },
+    submitLabel() {
+      return this.canSubmit ? 'Completed Sequence' : 'Please add an element'
     },
   },
   emits: ['svg-updated'],
@@ -103,19 +107,15 @@ export default {
       this.dotButton = false
     },
     submit() {
-      if (this.sliceElements.length !== 0) {
-        if (this.blockedPanel === false) {
-          this.blockedPanel = true
-          let xmlSnippet = VerovioHelper.getXmlFromElements(this.xml, this.sliceElements)
+      if (this.blockedPanel === false) {
+        this.blockedPanel = true
+        let xmlSnippet = VerovioHelper.getXmlFromElements(this.xml, this.sliceElements)
 
-          this.$emit('svg-updated', xmlSnippet)
-          axios.post(`http://localhost:443/${this.taskID}`, xmlSnippet)
-              .then(response => this.labelId = response.data.id);
-        } else {
-          this.blockedPanel = false
-        }
+        this.$emit('svg-updated', xmlSnippet)
+        axios.post(`http://localhost:443/${this.taskID}`, xmlSnippet)
+            .then(response => this.labelId = response.data.id);
       } else {
-        this.noteMsg = true
+        this.blockedPanel = false
       }
     }
   },
