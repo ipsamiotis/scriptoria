@@ -15,17 +15,14 @@
       </div>
       <div class="mei-viewer">
         <VerovioLoader :context="selectedTask.context" :measure-snippet="editedSnippet"/>
-        <!-- <div id="loader"></div> -->
       </div>
-      <!--      <div class="btn-group">-->
-      <!--        <AddNoteButtons @svg-updated="svgUpdated" :taskID="sliceId" :xml="selectedTask.xml"/>-->
-      <!--      </div>-->
       <div class="btn-group">
-        <Button type="button" label="Previous" class="p-button-outlined p-button-secondary" @click="currentIndex--"
+        <Button type="button" label="Previous" class="p-button-outlined p-button-secondary" @click="decrease"
                 :disabled="!canDecrease"/>
-        <span>{{ currentIndex }}</span>
-        <Button type="button" label="Next" class="p-button-outlined p-button-secondary" @click="currentIndex++"
+        <Button v-if="!canSubmit" type="button" label="Next"
+                class="p-button-outlined p-button-secondary" @click="increase"
                 :disabled="!canIncrease"/>
+        <Button v-else type="button" label="Submit" class="p-button-outlined p-button-secondary" @click="submit"/>
       </div>
       <div class="btn-group">
         <Button type="button" label="Pitch Down" class="p-button-outlined p-button-secondary" @click="pitchDown"/>
@@ -73,6 +70,9 @@ export default {
     }
   },
   computed: {
+    canSubmit() {
+      return this.currentIndex === this.elements.length - 1
+    },
     editedSnippet() {
       if (!this.selectedTask.xml) {
         return "";
@@ -95,6 +95,27 @@ export default {
     getSlice(taskObj) {
       this.selectedTask = taskObj
     },
+    submit() {
+      // TODO implement submit
+      alert("not yet implemented...")
+    },
+    increase() {
+      this.currentIndex++;
+    },
+    decrease() {
+      this.currentIndex--;
+    },
+    updateHighlights() {
+      const elements = document.getElementsByClassName("layer")[0]?.children;
+
+      if (!elements) {
+        return;
+      }
+      for (const element of elements) {
+        element.style.fill = "black"
+      }
+      elements[this.currentIndex].style.fill = "red";
+    },
 
     svgUpdated(svg) {
       this.snippet = svg;
@@ -107,6 +128,9 @@ export default {
     }
   },
 
+  updated() {
+    this.updateHighlights();
+  },
   mounted() {
     axios.get(`http://localhost:443/tasks/${this.taskId}`)
         .then(response => {
