@@ -25,6 +25,10 @@
         <Button v-else type="button" label="Submit" class="p-button-outlined p-button-secondary" @click="submit"/>
       </div>
       <div class="btn-group">
+        <SelectButton v-if="currentElement" v-model="currentElement.accidental" :options="accidentalOptions" optionLabel="name" optionValue="value"/>
+      </div>
+<!--      <p>{{currentElement.pname}} - {{currentElement.oct}}</p>-->
+      <div class="btn-group">
         <Button type="button" label="Pitch Down" class="p-button-outlined p-button-secondary" @click="pitchDown"/>
         <Button type="button" label="Pitch Up" class="p-button-outlined p-button-secondary" @click="pitchUp"/>
       </div>
@@ -40,6 +44,7 @@ import axios from 'axios'
 import SliceViewer from "@/components/SliceViewer"
 import VerovioLoader from "@/components/VerovioLoader"
 import Button from 'primevue/button';
+import SelectButton from 'primevue/selectbutton';
 import {VerovioHelper} from "@/scripts/VerovioHelper";
 
 export default {
@@ -47,6 +52,7 @@ export default {
   components: {
     SliceViewer,
     Button,
+    SelectButton,
     VerovioLoader,
   },
   data() {
@@ -55,6 +61,12 @@ export default {
       elements: [],
       selectedTask: {},
       sliceId: "",
+      accidentalOptions: [
+        {name: 'Sharp', value: 's'},
+        {name: 'Flat', value: 'f'},
+        {name: 'Natural', value: 'n'},
+        {name: 'None', value: undefined},
+      ],
       snippet: '<section>\n' +
           '<measure n="4" xml:id="measure-0000001064735795">\n' +
           '    <staff n="1" xml:id="staff-0000001522754679">\n' +
@@ -72,6 +84,9 @@ export default {
   computed: {
     canSubmit() {
       return this.currentIndex === this.elements.length - 1
+    },
+    currentElement() {
+      return this.elements[this.currentIndex];
     },
     editedSnippet() {
       if (!this.selectedTask.xml) {

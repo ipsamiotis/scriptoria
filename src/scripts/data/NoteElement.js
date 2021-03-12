@@ -3,17 +3,23 @@ import {SliceElement} from "@/scripts/data/SliceElement";
 export class NoteElement extends SliceElement {
     oct;
     pname;
+    accidental;
 
     pnames = ["a", "b", "c", "d", "e", "f", "g"]
 
-    constructor(length, dots, oct, pname) {
+    constructor(length, dots, oct, pname, accidental) {
         super('note', length, dots);
         this.oct = oct;
         this.pname = pname;
+        this.accidental = accidental
     }
 
     octString() {
         return this.oct ? 'oct=' + this.oct : '';
+    }
+
+    accidString() {
+        return this.accidental ? 'accid=' + this.accidental : '';
     }
 
     pnameString() {
@@ -39,10 +45,10 @@ export class NoteElement extends SliceElement {
     }
 
     toMei() {
-        return `<note ${this.octString()} ${this.pnameString()} dur='${this.length}' dots='${this.dots ? 1 : 0}'>`;
+        return `<note ${this.octString()} ${this.pnameString()} ${this.accidString()} dur='${this.length}' dots='${this.dots ? 1 : 0}'>`;
     }
 
     static fromAttributes(attr) {
-        return new NoteElement(attr.dur?.value, attr.dot?.value ? 1 : 0, attr.oct?.value, attr.pname?.value);
+        return new NoteElement(attr.dur?.value, attr.dot?.value ? 1 : 0, attr.oct?.value, attr.pname?.value, attr.accid?.value);
     }
 }
