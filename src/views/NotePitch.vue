@@ -16,6 +16,7 @@
       <div class="mei-viewer">
         <VerovioLoader :context="selectedTask.context" :measure-snippet="editedSnippet"/>
       </div>
+
       <div class="btn-group">
         <Button type="button" label="Previous" class="p-button-outlined p-button-secondary" @click="decrease"
                 :disabled="!canDecrease"/>
@@ -25,9 +26,9 @@
         <Button v-else type="button" label="Submit" class="p-button-outlined p-button-secondary" @click="submit"/>
       </div>
       <div class="btn-group">
-        <SelectButton v-if="currentElement" v-model="currentElement.accidental" :options="accidentalOptions" optionLabel="name" optionValue="value"/>
+        <SelectButton v-if="currentElement" v-model="currentElement.accidental" :options="accidentalOptions"
+                      optionLabel="name" optionValue="value"/>
       </div>
-<!--      <p>{{currentElement.pname}} - {{currentElement.oct}}</p>-->
       <div class="btn-group">
         <Button type="button" label="Pitch Down" class="p-button-outlined p-button-secondary" @click="pitchDown"/>
         <Button type="button" label="Pitch Up" class="p-button-outlined p-button-secondary" @click="pitchUp"/>
@@ -174,7 +175,7 @@ export default {
     // grid-column-start: 1;
     // grid-column-end: 2;
     grid-row-start: 1;
-    grid-row-end: 4;
+    grid-row-end: 5;
   }
 
   .mei-viewer {
