@@ -11,71 +11,114 @@
     </div>
     <div class="task-viewports">
       <div class="img-viewer">
-        <SliceViewer :slice-file="state.selectedTask.image_path"/>
+        <SliceViewer :slice-file="selectedTask.image_path"/>
       </div>
       <div class="mei-viewer">
-        <VerovioLoader :context="state.selectedTask.context" :measure-snippet="state.snippet"/>
+        <VerovioLoader :context="selectedTask.context" :measure-snippet="editedSnippet"/>
         <!-- <div id="loader"></div> -->
       </div>
+      <!--      <div class="btn-group">-->
+      <!--        <AddNoteButtons @svg-updated="svgUpdated" :taskID="sliceId" :xml="selectedTask.xml"/>-->
+      <!--      </div>-->
       <div class="btn-group">
-        <AddNoteButtons @svg-updated="svgUpdated" :taskID="state.sliceId" :xml="state.selectedTask.xml"/>
+        <Button type="button" label="Previous" class="p-button-outlined p-button-secondary" @click="currentIndex--"
+                :disabled="!canDecrease"/>
+        <span>{{ currentIndex }}</span>
+        <Button type="button" label="Next" class="p-button-outlined p-button-secondary" @click="currentIndex++"
+                :disabled="!canIncrease"/>
+      </div>
+      <div class="btn-group">
+        <Button type="button" label="Pitch Down" class="p-button-outlined p-button-secondary" @click="pitchDown"/>
+        <Button type="button" label="Pitch Up" class="p-button-outlined p-button-secondary" @click="pitchUp"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {reactive, onMounted, computed} from "vue"
 import {useRoute} from 'vue-router';
 
 import axios from 'axios'
 
 import SliceViewer from "@/components/SliceViewer"
-import AddNoteButtons from "@/components/AddNoteButtons"
 import VerovioLoader from "@/components/VerovioLoader"
+import Button from 'primevue/button';
+import {VerovioHelper} from "@/scripts/VerovioHelper";
 
 export default {
   name: "NotePitch",
   components: {
     SliceViewer,
+    Button,
     VerovioLoader,
-    AddNoteButtons
   },
-
-  setup() {
-    const route = useRoute();
-    const taskId = computed(() => route.params.taskId)
-
-    const state = reactive({
+  data() {
+    return {
+      currentIndex: 0,
+      elements: [],
       selectedTask: {},
       sliceId: "",
-      snippet: '<section><measure label="41" n="41" xml:id="measure_80f64356-6e27-4a3b-a4d2-286d551012ad"><staff facs="#zone_8bfc7fe1-c5d5-44f0-a850-8e6193e75e77" label="6" n="6" xml:id="staff_8d881556-70dd-40c9-a476-ec5d03553a9e"><layer><clef xmlns="http://www.w3.org/1999/xhtml" shape="G" line="2"></clef></layer></staff></measure></section>',
-    })
-
-    function svgUpdated(svg) {
-      console.log("note pitch")
-      state.snippet = svg;
+      snippet: '<section>\n' +
+          '<measure n="4" xml:id="measure-0000001064735795">\n' +
+          '    <staff n="1" xml:id="staff-0000001522754679">\n' +
+          '        <layer n="1" xml:id="layer-0000001375268654">\n' +
+          '            <note dur="2" oct="5" pname="c" stem.dir="up" xml:id="note-0000000881326584"/>\n' +
+          '            <note dur="2" oct="5" pname="d" stem.dir="up" xml:id="note-0000000881326584"/>\n' +
+          '            <note dur="4" oct="5" pname="e" stem.dir="up" xml:id="note-0000000881326584"/>\n' +
+          '            <note dur="4" oct="5" pname="d" stem.dir="up" xml:id="note-0000000881326584"/>\n' +
+          '        </layer>\n' +
+          '    </staff>\n' +
+          '</measure>\n' +
+          '</section>',
     }
-
-    function getSlice(taskObj) {
-      state.selectedTask = taskObj
+  },
+  computed: {
+    editedSnippet() {
+      if (!this.selectedTask.xml) {
+        return "";
+      }
+      return VerovioHelper.getXmlFromElements(this.selectedTask.xml, this.elements)
+    },
+    canIncrease() {
+      return this.currentIndex < this.elements.length - 1;
+    },
+    canDecrease() {
+      return this.currentIndex > 0;
+    },
+    taskId() {
+      const route = useRoute();
+      return route.params.taskId
     }
+  },
 
-    onMounted(() => {
-      axios.get(`http://localhost:443/tasks/${taskId.value}`)
-          .then(response => {
-            state.sliceId = taskId.value
-            getSlice(response.data)
-          });
-    })
+  methods: {
+    getSlice(taskObj) {
+      this.selectedTask = taskObj
+    },
 
-    return {
-      state,
-      getSlice,
-      svgUpdated,
-      taskId
+    svgUpdated(svg) {
+      this.snippet = svg;
+    },
+    pitchDown() {
+      this.elements[this.currentIndex].pitchDown()
+    },
+    pitchUp() {
+      this.elements[this.currentIndex].pitchUp()
     }
-  }
+  },
+
+  mounted() {
+    axios.get(`http://localhost:443/tasks/${this.taskId}`)
+        .then(response => {
+          this.sliceId = this.taskId
+          this.getSlice(response.data)
+        });
+
+    this.elements = VerovioHelper.getElementsFromSectionXml(this.snippet);
+
+  },
+
+
 }
 </script>
 

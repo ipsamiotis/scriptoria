@@ -1,4 +1,5 @@
 import verovio from 'verovio'
+import {NoteElement} from "@/scripts/data/NoteElement";
 
 /**
  * Simple class to help us reuse toolkit instances.
@@ -34,5 +35,18 @@ export class VerovioHelper {
         }
         const serializer = new XMLSerializer();
         return serializer.serializeToString(xmlDoc);
+    }
+
+    static getElementsFromSectionXml(xml) {
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xml, "text/xml");
+        const elementsXml = xmlDoc.getElementsByTagName("layer")[0].children;
+
+        const elements = []
+        for (const elemXml of elementsXml) {
+            // TODO also create rests
+            elements.push(NoteElement.fromAttributes(elemXml.attributes))
+        }
+        return elements;
     }
 }
