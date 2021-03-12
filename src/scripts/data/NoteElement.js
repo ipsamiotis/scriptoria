@@ -5,7 +5,7 @@ export class NoteElement extends SliceElement {
     pname;
     accidental;
 
-    pnames = ["a", "b", "c", "d", "e", "f", "g"]
+    pnames = ["c", "d", "e", "f", "g", "a", "b"]
 
     constructor(length, dots, oct, pname, accidental) {
         super('note', length, dots);
@@ -27,18 +27,18 @@ export class NoteElement extends SliceElement {
     }
 
     pitchUp() {
-        if (this.pname === "g") {
+        if (this.pname === "b") {
             this.oct++;
-            this.pname = "a"
+            this.pname = "c"
         } else {
             this.pname = this.pnames[this.pnames.indexOf(this.pname) + 1]
         }
     }
 
     pitchDown() {
-        if (this.pname === "a") {
+        if (this.pname === "c") {
             this.oct--;
-            this.pname = "g"
+            this.pname = "b"
         } else {
             this.pname = this.pnames[this.pnames.indexOf(this.pname) - 1]
         }
