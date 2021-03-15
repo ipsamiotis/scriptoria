@@ -113,6 +113,9 @@ export default {
     },
     deleteElement() {
       this.sliceElements.splice(this.currentIndex, 1);
+      if (this.currentIndex >= this.sliceElements.length && this.currentIndex !== 0) {
+        this.currentIndex--;
+      }
       let xmlSnippet = VerovioHelper.getXmlFromElements(this.xml, this.sliceElements)
       this.$emit('svg-updated', xmlSnippet)
     },
