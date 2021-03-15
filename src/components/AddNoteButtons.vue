@@ -22,7 +22,14 @@
                 class="p-button-outlined p-button-secondary" @click="addRest()"
                 :disabled="!isSliderValid"/>
       </div>
+      <Button type="button" label="Delete"
+              class="p-button-outlined p-button-secondary" @click="deleteElement"/>
 
+      <Button type="button" label="Previous" class="p-button-outlined p-button-secondary" @click="decrease"
+              :disabled="!canDecrease"/>
+      <Button type="button" label="Next"
+              class="p-button-outlined p-button-secondary" @click="increase"
+              :disabled="!canIncrease"/>
     </div>
   </BlockUI>
   <Button id="submitButton" type="button" :label="submitLabel"
@@ -60,7 +67,9 @@ export default {
       noteDurations: ['', '1/32', '1/16', '1/8', '1/4', '1/2', '1'],
       adjustedSliderValue: [32, 16, 8, 4, 2, 1],
       dotButton: false,
-      blockedPanel: false
+      blockedPanel: false,
+      currentIndex: 0,
+
     }
   },
   props: {
@@ -74,6 +83,12 @@ export default {
     }
   },
   computed: {
+    canIncrease() {
+      return this.currentIndex < this.sliceElements.length - 1;
+    },
+    canDecrease() {
+      return this.currentIndex > 0;
+    },
     isSliderValid() {
       return this.sliderValue !== 0;
     },
@@ -86,6 +101,22 @@ export default {
   },
 
   methods: {
+    increase() {
+      this.currentIndex++;
+      let xmlSnippet = VerovioHelper.getXmlFromElements(this.xml, this.sliceElements)
+      this.$emit('svg-updated', xmlSnippet)
+    },
+    decrease() {
+      this.currentIndex--;
+      let xmlSnippet = VerovioHelper.getXmlFromElements(this.xml, this.sliceElements)
+      this.$emit('svg-updated', xmlSnippet)
+    },
+    deleteElement() {
+      this.sliceElements.splice(this.currentIndex, 1);
+      let xmlSnippet = VerovioHelper.getXmlFromElements(this.xml, this.sliceElements)
+      this.$emit('svg-updated', xmlSnippet)
+    },
+
     numElements(type) {
       return this.sliceElements.filter(element => {
         return element.type === type;
@@ -95,13 +126,11 @@ export default {
       let note = new NoteElement(this.adjustedSliderValue[this.sliderValue - 1], this.dotButton);
       this.sliceElements.push(note)
       this.resetForm();
-      this.$emit('svg-updated', VerovioHelper.getXmlFromElements(this.xml, this.sliceElements))
     },
     addRest() {
       let rest = new RestElement(this.adjustedSliderValue[this.sliderValue - 1], this.dotButton);
       this.sliceElements.push(rest)
       this.resetForm();
-      this.$emit('svg-updated', VerovioHelper.getXmlFromElements(this.xml, this.sliceElements))
     },
     resetForm() {
       this.sliderValue = 0
@@ -112,7 +141,6 @@ export default {
         this.blockedPanel = true
         let xmlSnippet = VerovioHelper.getXmlFromElements(this.xml, this.sliceElements)
 
-        this.$emit('svg-updated', xmlSnippet)
         axios.post(`http://localhost:443/${this.taskID}`, xmlSnippet)
             .then(response => this.labelId = response.data.id);
       } else {
@@ -120,12 +148,17 @@ export default {
       }
     }
   },
+  updated() {
+    let xmlSnippet = VerovioHelper.getXmlFromElements(this.xml, this.sliceElements)
+    this.$emit('svg-updated', xmlSnippet)
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-.button-group {
-  display: grid;
-  height: 200px;
+.btn-group {
+  align-self: end;
+  justify-self: center;
 }
+
 </style>

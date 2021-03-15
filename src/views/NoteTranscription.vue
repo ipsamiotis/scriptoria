@@ -11,25 +11,24 @@
     </div>
     <div class="task-viewports">
       <div class="img-viewer">
-        <SliceViewer :slice-file="state.selectedTask.image_path"/>
+        <SliceViewer :slice-file="selectedTask.image_path"/>
       </div>
-      <VerovioLoader :context="state.selectedTask.context" :measure-snippet="state.snippet"/>
+      <VerovioLoader :context="selectedTask.context" :measure-snippet="snippet"/>
       <div class="btn-group">
-        <AddNoteButtons @svg-updated="svgUpdated" :taskID="state.sliceId" :xml="state.selectedTask.xml"/>
+        <AddNoteButtons ref="buttons" @svg-updated="svgUpdated" :taskID="sliceId" :xml="selectedTask.xml"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {reactive, onMounted, computed} from "vue"
-import {useRoute} from 'vue-router';
 
 import axios from 'axios'
 
 import SliceViewer from "@/components/SliceViewer"
 import AddNoteButtons from "@/components/AddNoteButtons"
 import VerovioLoader from "@/components/VerovioLoader";
+import {useRoute} from "vue-router";
 
 export default {
   name: "NoteTranscription",
@@ -38,40 +37,54 @@ export default {
     SliceViewer,
     AddNoteButtons
   },
-
-  setup() {
-    const route = useRoute();
-    const taskId = computed(() => route.params.taskId)
-
-    const state = reactive({
+  data() {
+    return {
       selectedTask: {},
       sliceId: "",
       snippet: '<section><measure label="41" n="41" xml:id="measure_80f64356-6e27-4a3b-a4d2-286d551012ad"><staff facs="#zone_8bfc7fe1-c5d5-44f0-a850-8e6193e75e77" label="6" n="6" xml:id="staff_8d881556-70dd-40c9-a476-ec5d03553a9e"><layer><clef xmlns="http://www.w3.org/1999/xhtml" shape="G" line="2"></clef></layer></staff></measure></section>',
-    })
-
-    function svgUpdated(svg) {
-      state.snippet = svg;
     }
+  },
 
-    function getSlice(taskObj) {
-      state.selectedTask = taskObj
+  computed: {
+    taskId() {
+      const route = useRoute();
+      return route.params.taskId
     }
+  },
+  updated() {
+    this.updateHighlights();
+  },
 
-    onMounted(() => {
-      axios.get(`http://localhost:443/tasks/${taskId.value}`)
-          .then(response => {
-            state.sliceId = taskId.value
-            getSlice(response.data)
-          });
-    })
+  methods: {
+    updateHighlights() {
+      const elements = document.getElementsByClassName("layer")[0]?.children;
 
-    return {
-      state,
-      getSlice,
-      svgUpdated,
-      taskId
+      if (!elements || elements.length === 0) {
+        return;
+      }
+      for (const element of elements) {
+        element.style.fill = "black"
+      }
+      const currentIndex = this.$refs.buttons.$data.currentIndex;
+      console.log(currentIndex)
+      elements[currentIndex].style.fill = "red";
+    },
+    svgUpdated(svg) {
+      this.snippet = svg;
+      this.updateHighlights();
+    },
+    getSlice(taskObj) {
+      this.selectedTask = taskObj
     }
-  }
+  },
+
+  mounted() {
+    axios.get(`http://localhost:443/tasks/${this.taskId}`)
+        .then(response => {
+          this.sliceId = this.taskId
+          this.getSlice(response.data)
+        });
+  },
 }
 </script>
 
