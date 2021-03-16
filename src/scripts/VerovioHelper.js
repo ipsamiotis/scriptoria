@@ -13,10 +13,13 @@ export class VerovioHelper {
     static vrvToolkit;
 
     static init() {
-        verovio.module.onRuntimeInitialized = () => {
-            this.vrvToolkit = new verovio.toolkit();
-            this.vrvToolkit.setOptions(this.options)
-        }
+        return new Promise(resolve => {
+            verovio.module.onRuntimeInitialized = () => {
+                this.vrvToolkit = new verovio.toolkit();
+                this.vrvToolkit.setOptions(this.options)
+                resolve();
+            }
+        })
     }
 
     static getSvgFromMei(mei) {

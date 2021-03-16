@@ -14,8 +14,10 @@ const app = createApp(App)
 app.use(router)
 app.use(PrimeVue)
 
-VerovioHelper.init();
+// Only start the app after VerovioHelper is initialized
+VerovioHelper.init().then(() => {
+    app.mount('#app')
+});
 
 // app.component('Slider', Slider)
 
-app.mount('#app')
