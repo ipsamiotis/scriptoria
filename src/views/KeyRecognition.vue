@@ -1,5 +1,5 @@
 <template>
-  <div class="task">
+  <div class="task" style="margin-bottom: 80px;">
     <div class="task-header">
       <h3>Key Recognition</h3>
       The given segment might contain a key signature. <br>

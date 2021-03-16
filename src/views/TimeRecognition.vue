@@ -1,5 +1,5 @@
 <template>
-  <div class="task">
+  <div class="task" style="margin-bottom: 80px;">
     <div class="task-header">
       <h3>Time Recognition</h3>
       The given segment might contain a time signature. <br>

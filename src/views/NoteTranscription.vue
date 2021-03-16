@@ -1,5 +1,5 @@
 <template>
-  <div class="task">
+  <div class="task" style="margin-bottom: 80px;">
     <div class="task-header">
       <h3>Note Transcription</h3>
       The given segment to the left might contain notes and rests. <br>
