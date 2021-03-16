@@ -139,16 +139,48 @@ export default {
       var xmlDoc = parser.parseFromString(xmlString, "text/xml");
 
       if (time !== '') {
-        // find measure and append before
         var elements = xmlDoc.getElementsByTagName("measure");
-        var node = xmlDoc.createElement("scoreDef");
-        if (state.nominator !== 0 || state.denominator.toString() !== 0) {
-          node.setAttribute("meter.count", state.nominator.toString());
-          node.setAttribute("meter.unit", state.denominator.toString());
+        var n = xmlDoc.getElementsByTagName("staff")[0].getAttribute("n");
+
+        var scoreDefs = xmlDoc.getElementsByTagName("scoreDef");
+        var scoreDef = null
+        if (scoreDefs.length > 0) {
+          scoreDef = scoreDefs[0];
         } else {
-          node.setAttribute("meter.sym", state.sliceLabels);
+          scoreDef = xmlDoc.createElement("scoreDef");
+          xmlDoc.documentElement.insertBefore(scoreDef, elements[0]);
         }
-        xmlDoc.documentElement.insertBefore(node, elements[0]);
+
+        var staffGrps = scoreDef.getElementsByTagName("staffGrp");
+        var staffGrp = null;
+        if (staffGrps.length > 0) {
+          staffGrp = staffGrps[0];
+        } else {
+          staffGrp = xmlDoc.createElement("staffGrp");
+          scoreDef.appendChild(staffGrp);
+        }
+
+        var staffDefs = staffGrp.getElementsByTagName("staffDef");
+        var staffDef = null;
+        for (let sd of staffDefs) {
+          if (sd.getAttribute("n")==n) {
+            staffDef = sd;
+            break;
+          }
+        }
+
+        if (staffDef === null) {
+          staffDef = xmlDoc.createElement("staffDef");
+          staffDef.setAttribute("n", n);
+          staffGrp.appendChild(staffDef);
+        }
+
+        if (state.nominator !== 0 || state.denominator.toString() !== 0) {
+          staffDef.setAttribute("meter.count", state.nominator.toString());
+          staffDef.setAttribute("meter.unit", state.denominator.toString());
+        } else {
+          staffDef.setAttribute("meter.sym", state.sliceLabels);
+        }
       }
       var s = new XMLSerializer();
       var newXmlStr = s.serializeToString(xmlDoc);

@@ -140,37 +140,52 @@ export default {
       var xmlDoc = parser.parseFromString(xmlString, "text/xml");
 
       if (key != '') {
-        // find measure and append before
         var elements = xmlDoc.getElementsByTagName("measure");
-        var node = xmlDoc.getElementsByTagName("scoreDef");
-        if (node.length == 0) {
-          node = xmlDoc.createElement("scoreDef"); // create new scoreDef ONLY IF there is no pre-existing one
-          node.setAttribute("key.sig.show", "true")
-          node.setAttribute("key.sig", `${state.amountElements.toString()}${key}`);
-          // Support for natural key signatures below
-          // if (key == "0") {
-          //     node.setAttribute("key.sig.show", "true")
-          //     node.setAttribute("key.sig", "0");
-          // } else {
-          //     node.setAttribute("key.sig.show", "true")
-          //     node.setAttribute("key.sig", `${state.amountElements.toString()}${key}`);
-          // }
-          xmlDoc.documentElement.insertBefore(node, elements[0]);
+        var n = xmlDoc.getElementsByTagName("staff")[0].getAttribute("n");
+
+
+
+        var scoreDefs = xmlDoc.getElementsByTagName("scoreDef");
+        var scoreDef = null
+        if (scoreDefs.length > 0) {
+          scoreDef = scoreDefs[0];
         } else {
-          console.log(node)
-          node[0].setAttribute("key.sig.show", "true")
-          node[0].setAttribute("key.sig", `${state.amountElements.toString()}${key}`);
-          // if (key == "0") {
-          //     node.setAttribute("key.sig.show", "true")
-          //     node.setAttribute("key.sig", "0");
-          // } else {
-          //     node.setAttribute("key.sig.show", "true")
-          //     node.setAttribute("key.sig", `${state.amountElements.toString()}${key}`);
-          // }
+          scoreDef = xmlDoc.createElement("scoreDef");
+          xmlDoc.documentElement.insertBefore(scoreDef, elements[0]);
         }
+
+        var staffGrps = scoreDef.getElementsByTagName("staffGrp");
+        var staffGrp = null;
+        if (staffGrps.length > 0) {
+          staffGrp = staffGrps[0];
+        } else {
+          staffGrp = xmlDoc.createElement("staffGrp");
+          scoreDef.appendChild(staffGrp);
+        }
+
+        var staffDefs = staffGrp.getElementsByTagName("staffDef");
+        var staffDef = null;
+        for (let sd of staffDefs) {
+          if (sd.getAttribute("n")==n) {
+            staffDef = sd;
+            break;
+          }
+        }
+
+        if (staffDef === null) {
+          staffDef = xmlDoc.createElement("staffDef");
+          staffDef.setAttribute("n", n);
+          staffGrp.appendChild(staffDef);
+        }
+
+        staffDef.setAttribute("key.sig.show", "true")
+        staffDef.setAttribute("key.sig", `${state.amountElements.toString()}${key}`);
       }
+
       var s = new XMLSerializer();
       var newXmlStr = s.serializeToString(xmlDoc);
+
+      console.log(newXmlStr)
 
       return newXmlStr
     }
