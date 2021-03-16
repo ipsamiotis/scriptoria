@@ -80,7 +80,7 @@ export default {
       });
     },
     canSubmit() {
-      return this.currentIndex === this.filteredLength.length - 1
+      return this.currentIndex === this.filteredLength - 1
     },
     currentElement() {
       return this.filteredElements[this.currentIndex];
