@@ -109,7 +109,7 @@ export default {
     },
     submit() {
       // TODO implement submit
-      alert("not yet implemented...")
+      axios.post(`http://localhost:443/${this.taskId}`, this.editedSnippet);
       window.parent.postMessage('submit', '*')
     },
     increase() {
