@@ -57,11 +57,21 @@ export default {
 
   methods: {
     updateHighlights() {
-      const elements = document.getElementsByClassName("layer")[0]?.children;
+      let elements = document.getElementsByClassName("layer")[0]?.children;
+      // Convert to array
+      elements = [...elements]
 
-      if (!elements || elements.length === 0) {
+      if (!elements) {
         return;
       }
+      elements = elements.filter(elements => {
+        return elements.id.includes('rest') || elements.id.includes('note');
+      })
+
+      if (elements.length === 0) {
+        return;
+      }
+
       for (const element of elements) {
         element.style.fill = "black"
       }
