@@ -149,6 +149,7 @@ export default {
       } else {
         this.blockedPanel = false
       }
+      window.parent.postMessage('submit', '*');
     }
   },
   updated() {

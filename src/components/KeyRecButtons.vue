@@ -131,6 +131,7 @@ export default {
         state.disabledInput = true
         state.confirmBtnTxt = "Submitted"
         state.confirmButton = "confirm-btn__submitted"
+        window.parent.postMessage('submit', '*');
       }
     }
 

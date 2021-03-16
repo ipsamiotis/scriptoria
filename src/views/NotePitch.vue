@@ -110,6 +110,7 @@ export default {
     submit() {
       // TODO implement submit
       alert("not yet implemented...")
+      window.parent.postMessage('submit', '*')
     },
     increase() {
       this.currentIndex++;

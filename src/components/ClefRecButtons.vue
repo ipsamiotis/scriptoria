@@ -101,6 +101,7 @@ export default {
         document.getElementById("btn-4").className = "btn-toggle__disabled"
         state.confirmBtnTxt = "Submitted"
         state.confirmButton = "confirm-btn__submitted"
+        window.parent.postMessage('submit', '*');
       }
     }
 
