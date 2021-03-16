@@ -49,6 +49,6 @@ export class NoteElement extends SliceElement {
     }
 
     static fromAttributes(attr) {
-        return new NoteElement(attr.dur?.value, attr.dot?.value ? 1 : 0, attr.oct?.value, attr.pname?.value, attr.accid?.value);
+        return new NoteElement(attr.dur?.value, attr.dot?.value ? 1 : 0, attr.oct?.value ?? 4, attr.pname?.value ?? 'a', attr.accid?.value);
     }
 }

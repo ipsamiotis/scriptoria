@@ -68,35 +68,31 @@ export default {
         {name: 'Natural', value: 'n'},
         {name: 'None', value: undefined},
       ],
-      snippet: '<section>\n' +
-          '<measure n="4" xml:id="measure-0000001064735795">\n' +
-          '    <staff n="1" xml:id="staff-0000001522754679">\n' +
-          '        <layer n="1" xml:id="layer-0000001375268654">\n' +
-          '            <note dur="2" oct="5" pname="c" stem.dir="up" xml:id="note-0000000881326584"/>\n' +
-          '            <note dur="2" oct="5" pname="d" stem.dir="up" xml:id="note-0000000881326584"/>\n' +
-          '            <note dur="4" oct="5" pname="e" stem.dir="up" xml:id="note-0000000881326584"/>\n' +
-          '            <note dur="4" oct="5" pname="d" stem.dir="up" xml:id="note-0000000881326584"/>\n' +
-          '        </layer>\n' +
-          '    </staff>\n' +
-          '</measure>\n' +
-          '</section>',
     }
   },
   computed: {
+    filteredLength() {
+      return this.filteredElements.length;
+    },
+    filteredElements() {
+      return this.elements.filter(element => {
+        return element.type === 'rest' || element.type === 'note';
+      });
+    },
     canSubmit() {
-      return this.currentIndex === this.elements.length - 1
+      return this.currentIndex === this.filteredLength.length - 1
     },
     currentElement() {
-      return this.elements[this.currentIndex];
+      return this.filteredElements[this.currentIndex];
     },
     editedSnippet() {
       if (!this.selectedTask.xml) {
         return "";
       }
-      return VerovioHelper.getXmlFromElements(this.selectedTask.xml, this.elements)
+      return VerovioHelper.getXmlFromElements(this.selectedTask.xml, this.elements, true)
     },
     canIncrease() {
-      return this.currentIndex < this.elements.length - 1;
+      return this.currentIndex < this.filteredLength - 1;
     },
     canDecrease() {
       return this.currentIndex > 0;
@@ -122,11 +118,21 @@ export default {
       this.currentIndex--;
     },
     updateHighlights() {
-      const elements = document.getElementsByClassName("layer")[0]?.children;
+      let elements = document.getElementsByClassName("layer")[0]?.children;
+      // Convert to array
+      elements = [...elements]
 
       if (!elements) {
         return;
       }
+      elements = elements.filter(elements => {
+        return elements.id.includes('rest') || elements.id.includes('note');
+      })
+
+      if (elements.length === 0) {
+        return;
+      }
+
       for (const element of elements) {
         element.style.fill = "black"
       }
@@ -134,13 +140,13 @@ export default {
     },
 
     svgUpdated(svg) {
-      this.snippet = svg;
+      this.editedSnippet = svg;
     },
     pitchDown() {
-      this.elements[this.currentIndex].pitchDown()
+      this.filteredElements[this.currentIndex].pitchDown()
     },
     pitchUp() {
-      this.elements[this.currentIndex].pitchUp()
+      this.filteredElements[this.currentIndex].pitchUp()
     }
   },
 
@@ -152,9 +158,8 @@ export default {
         .then(response => {
           this.sliceId = this.taskId
           this.getSlice(response.data)
+          this.elements = VerovioHelper.getElementsFromSectionXml(this.selectedTask.xml);
         });
-
-    this.elements = VerovioHelper.getElementsFromSectionXml(this.snippet);
 
   },
 

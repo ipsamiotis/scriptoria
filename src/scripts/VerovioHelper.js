@@ -1,5 +1,7 @@
 import verovio from 'verovio'
 import {NoteElement} from "@/scripts/data/NoteElement";
+import {ClefElement} from "@/scripts/data/ClefElement";
+import {RestElement} from "@/scripts/data/RestElement";
 
 /**
  * Simple class to help us reuse toolkit instances.
@@ -27,11 +29,14 @@ export class VerovioHelper {
         return this.vrvToolkit.renderToSVG(1, {});
     }
 
-    static getXmlFromElements(xml, elements) {
+    static getXmlFromElements(xml, elements, removeChildren = false) {
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(xml, "text/xml");
         const layer = xmlDoc.getElementsByTagName("layer");
 
+        if (removeChildren) {
+            layer[0].innerHTML = '';
+        }
         for (let element of elements) {
             let element_xml = document.createRange().createContextualFragment(element.toMei());
             layer[0].appendChild(element_xml)
@@ -47,8 +52,15 @@ export class VerovioHelper {
 
         const elements = []
         for (const elemXml of elementsXml) {
-            // TODO also create rests
-            elements.push(NoteElement.fromAttributes(elemXml.attributes))
+            console.log(elemXml.tagName);
+
+            if (elemXml.tagName.includes('note')) {
+                elements.push(NoteElement.fromAttributes(elemXml.attributes))
+            } else if (elemXml.tagName.includes('clef')) {
+                elements.push(ClefElement.fromAttributes(elemXml.attributes))
+            } else if (elemXml.tagName.includes('rest')) {
+                elements.push(RestElement.fromAttributes(elemXml.attributes))
+            }
         }
         return elements;
     }

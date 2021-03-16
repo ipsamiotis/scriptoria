@@ -8,4 +8,8 @@ export class RestElement extends SliceElement {
     toMei() {
         return `<rest dur='${this.length}' dots='${this.dots ? 1 : 0}'>`;
     }
+
+    static fromAttributes(attr) {
+        return new RestElement(attr.length?.value, attr.dot?.value ? 1 : 0);
+    }
 }
