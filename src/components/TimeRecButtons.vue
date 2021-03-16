@@ -176,11 +176,11 @@ export default {
           staffGrp.appendChild(staffDef);
         }
 
-        if (state.nominator !== 0 || state.denominator.toString() !== 0) {
+        if (state.nominator.toString() === "0" && state.denominator.toString() === "0") {
+          staffDef.setAttribute("meter.sym", state.sliceLabels);
+        } else {
           staffDef.setAttribute("meter.count", state.nominator.toString());
           staffDef.setAttribute("meter.unit", state.denominator.toString());
-        } else {
-          staffDef.setAttribute("meter.sym", state.sliceLabels);
         }
       }
       var s = new XMLSerializer();
