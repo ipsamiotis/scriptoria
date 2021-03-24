@@ -136,7 +136,6 @@ export default {
       this.resetForm();
     },
     resetForm() {
-      this.sliderValue = 0
       this.dotButton = false
     },
     submit() {
@@ -164,5 +163,21 @@ export default {
   align-self: end;
   justify-self: center;
 }
+
+.btn-group > * > * > * > *   {
+  margin: 7px 0 7px 0;
+  vertical-align: middle;
+}
+
+.btn-group > * > * > * {
+  margin: 5px;
+  vertical-align: middle;
+}
+
+.btn-group > * {
+  margin: 5px;
+  vertical-align: middle;
+}
+
 
 </style>
