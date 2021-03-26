@@ -45,10 +45,10 @@ export class NoteElement extends SliceElement {
     }
 
     toMei() {
-        return `<note ${this.octString()} ${this.pnameString()} ${this.accidString()} dur='${this.length}' dots='${this.dots ? 1 : 0}'>`;
+        return `<note ${this.octString()} ${this.pnameString()} ${this.accidString()} dur='${this.length}' dots='${this.dots}'>`;
     }
 
     static fromAttributes(attr) {
-        return new NoteElement(attr.dur?.value, attr.dots?.value ? 1 : 0, attr.oct?.value ?? 4, attr.pname?.value ?? 'a', attr.accid?.value);
+        return new NoteElement(attr.dur?.value, attr.dots?.value, attr.oct?.value ?? 4, attr.pname?.value ?? 'a', attr.accid?.value);
     }
 }

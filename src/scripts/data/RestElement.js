@@ -6,10 +6,10 @@ export class RestElement extends SliceElement {
     }
 
     toMei() {
-        return `<rest dur='${this.length}' dots='${this.dots ? 1 : 0}'>`;
+        return `<rest dur='${this.length}' dots='${this.dots}'>`;
     }
 
     static fromAttributes(attr) {
-        return new RestElement(attr.dur?.value, attr.dots?.value ? 1 : 0);
+        return new RestElement(attr.dur?.value, attr.dots?.value);
     }
 }
