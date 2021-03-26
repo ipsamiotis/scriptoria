@@ -10,6 +10,6 @@ export class RestElement extends SliceElement {
     }
 
     static fromAttributes(attr) {
-        return new RestElement(attr.dur?.value, attr.dot?.value ? 1 : 0);
+        return new RestElement(attr.dur?.value, attr.dots?.value ? 1 : 0);
     }
 }
