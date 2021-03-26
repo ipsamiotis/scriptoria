@@ -15,7 +15,7 @@
       </div>
       <VerovioLoader :context="selectedTask.context" :measure-snippet="snippet"/>
       <div class="btn-group">
-        <AddNoteButtons ref="buttons" @svg-updated="svgUpdated" :taskID="sliceId" :xml="selectedTask.xml"/>
+        <AddNoteButtons ref="buttons" @svg-updated="svgUpdated" :taskID="sliceId" :context="selectedTask.context" :xml="selectedTask.xml"/>
       </div>
     </div>
   </div>

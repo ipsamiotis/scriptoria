@@ -80,6 +80,10 @@ export default {
     xml: {
       type: String,
       required: true,
+    },
+    context: {
+      type: String,
+      required: true,
     }
   },
   computed: {
@@ -98,6 +102,23 @@ export default {
     submitLabel() {
       return this.canSubmit ? 'Completed Sequence' : 'Please add an element'
     },
+    getLastClef() {
+        var clef = "G2"
+        const parser = new DOMParser();
+        var staffDefs = parser.parseFromString(this.xml, "text/xml").getElementsByTagName("staffDef");
+        if (staffDefs.length == 0) {
+          staffDefs = parser.parseFromString(this.context, "text/xml").getElementsByTagName("staffDef")
+        }
+        if (staffDefs.length > 0) {
+           const staffDef = staffDefs[staffDefs.length - 1]
+           const line = staffDef.getAttribute("clef.line");
+           const shape = staffDef.getAttribute("clef.shape");
+           if (!(line === undefined) && !(shape === undefined)) {
+              clef = shape.concat(line);
+           }
+        }
+        return clef
+    }
   },
 
   methods: {
@@ -126,7 +147,25 @@ export default {
       }).length.toString() ?? '0';
     },
     addNote() {
-      let note = new NoteElement(this.adjustedSliderValue[this.sliderValue - 1], this.dotButton);
+      var pname;
+      var oct;
+      switch(this.getLastClef) {
+        case "C3":
+          pname = "c";
+          oct = "4";
+          break;
+        case "F4":
+          pname = "d";
+          oct = "3";
+          break;
+        default: // G clef
+          pname = "b";
+          oct = "4";
+      } 
+
+      let note = new NoteElement(this.adjustedSliderValue[this.sliderValue - 1], this.dotButton, oct, pname);
+
+
       this.sliceElements.push(note)
       this.resetForm();
     },
