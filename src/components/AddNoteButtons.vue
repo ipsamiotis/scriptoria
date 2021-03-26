@@ -113,7 +113,7 @@ export default {
            const staffDef = staffDefs[staffDefs.length - 1]
            const line = staffDef.getAttribute("clef.line");
            const shape = staffDef.getAttribute("clef.shape");
-           if (!(line === undefined) && !(shape === undefined)) {
+           if (!(line === null) && !(shape === null)) {
               clef = shape.concat(line);
            }
         }
