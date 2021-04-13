@@ -1,65 +1,216 @@
 <template>
   <div class="task" style="margin-bottom: 80px;">
     <div class="task-header">
-      <h3>Key Recognition</h3>
-      The given segment might contain a key signature. <br>
-      Select "No Signature" or select the correct type in case you recognise any, alongside the amount.<br>
+
+    <h2 style="margin-left: 48px;">Key Recognition</h2>
+    <HelpPopup>
+      <img style="width: 50%;" src="@/assets/tutorial_gifs/keyrec.gif">
+      <p>Key signatures are only located at the very beginning of the measure and usually come in multiples.</p>
+      <p>Click the matching key signature toggles to select the type of signature you see.</p>
+      <p>Then click the button at the very right to increment the sharps/flats to match the image.</p>
+      <p>If you don't see any key signature, just click the "None" toggle</p>
+      <p>In case you don't understand what to do, or the task is malfunctioning, you may skip it with the "skip" button at the bottom right.</p>
+      <p>When done, you can click "Confirm"!</p>
+    </HelpPopup>
     </div>
     <div class="task-items">
-      <SliceViewer :slice-file="state.selectedTask.image_path"/>
+      <SliceViewer :slice-file="selectedTask.image_path"/>
+
     </div>
+
     <div class="task-input">
-      <KeyRecButtons :taskID="state.sliceId" :xml="state.selectedTask.xml"/>
+      <ToggleButton :disabled="submitted" @click="setNoKey();updateResultXml()" class="btn" v-model="noKeyToggle" onLabel="None" offLabel="None"/>
+      <ToggleButton :disabled="submitted" @click="setFlat();updateResultXml()" class="btn" v-model="useFlat" onIcon="key-flat-icon" offIcon="key-flat-icon"/>
+      <ToggleButton :disabled="submitted" @click="setSharp();updateResultXml()" class="btn" v-model="useSharp" onIcon="key-sharp-icon" offIcon="key-sharp-icon"/>
+
+      <Button v-model="count" class="btn p-button-outlined" :disabled="submitted || disabled || (!useSharp && !useFlat)"  @click="moreKeys();updateResultXml()">
+          <img v-bind:src="require('@/assets/icons/key_signatures/' + count + flatOrSharp + '.png')" />
+      </Button>
     </div>
+    <SubmitButton @submitted=disableUI :buttonDisabled="!canSubmit" :taskID="sliceId" :resultXml="resultXml"/>
+
   </div>
 </template>
 
 <script>
-import {reactive, onMounted, computed} from "vue"
 import {useRoute} from 'vue-router';
 
 import axios from 'axios'
-
+import ToggleButton from 'primevue/togglebutton';
+import SubmitButton from "@/components/SubmitButton";
 import SliceViewer from "@/components/SliceViewer"
-import KeyRecButtons from "@/components/KeyRecButtons"
+import HelpPopup from "@/components/HelpPopup"
+import Button from 'primevue/button';
+import {settings} from "@/scripts/Settings";
 
 export default {
   name: "KeyRecognition",
   components: {
     SliceViewer,
-    KeyRecButtons
+    ToggleButton,
+    SubmitButton,
+    HelpPopup,
+    Button
   },
-
-  setup() {
-    const route = useRoute();
-    const taskId = computed(() => route.params.taskId)
-
-
-    const state = reactive({
-      selectedTask: {}
-    })
-
-    function getSlice(taskObj) {
-      state.selectedTask = taskObj
+computed: {
+    canSubmit() {
+      return this.noKeyToggle || ((this.useFlat || this.useSharp) && this.count > 0);
+    },
+    taskId() {
+      const route = useRoute();
+      return route.params.taskId
+    },
+    disabled() {
+      return this.noKeyToggle;
+    },
+    flatOrSharp() {
+      return (this.useFlat ? 'f' : 's');
     }
+  },
+  methods: {
+    disableUI() {
+      this.submitted = true;
+      this.$forceUpdate();
+    },
+    moreKeys() {
+      this.count = this.count % 7 + 1;
+    },
+    setFlat() {
+      this.useSharp = false;
+      this.noKeyToggle = false;
+      if (this.useFlat) {
+        this.count = 1;
+      } else {
+        this.count = 0;
+      }
+    },
+    setSharp() {
+      this.useFlat = false;
+      this.noKeyToggle = false;
+      if (this.useSharp) {
+        this.count = 1;
+      } else {
+        this.count = 0;
+      }
+    },
+    setNoKey() {
+      this.useSharp = false;
+      this.useFlat = false;
+      this.count = 0;
+    },
+    // TODO: move to verovio helper somehow
+    updateScoreDef() {
+      var parser = new DOMParser();
+      var xmlDoc = parser.parseFromString(this.selectedTask.xml, "text/xml");
 
-    onMounted(() => {
-      axios.get(`http://localhost:443/tasks/${taskId.value}`)
-          .then(response => {
-            state.sliceId = taskId.value
-            getSlice(response.data)
-          });
-    })
+      var elements = xmlDoc.getElementsByTagName("measure");
+      var n = xmlDoc.getElementsByTagName("staff")[0].getAttribute("n");
 
+      var scoreDefs = xmlDoc.getElementsByTagName("scoreDef");
+      var scoreDef = null
+      if (scoreDefs.length > 0) {
+        scoreDef = scoreDefs[0];
+      } else {
+        scoreDef = xmlDoc.createElement("scoreDef");
+        xmlDoc.documentElement.insertBefore(scoreDef, elements[0]);
+      }
+
+      var staffGrps = scoreDef.getElementsByTagName("staffGrp");
+      var staffGrp = null;
+      if (staffGrps.length > 0) {
+        staffGrp = staffGrps[0];
+      } else {
+        staffGrp = xmlDoc.createElement("staffGrp");
+        scoreDef.appendChild(staffGrp);
+      }
+
+      var staffDefs = staffGrp.getElementsByTagName("staffDef");
+      var staffDef = null;
+      for (let sd of staffDefs) {
+        if (sd.getAttribute("n")==n) {
+          staffDef = sd;
+          break;
+        }
+      }
+
+      if (staffDef === null) {
+        staffDef = xmlDoc.createElement("staffDef");
+        staffDef.setAttribute("n", n);
+        staffGrp.appendChild(staffDef);
+      }
+
+      if (this.noKeyToggle) {
+        staffDef.removeAttribute("key.sig");
+      } else if (this.count > 0) {
+        staffDef.setAttribute("key.sig", this.count.toString() + this.flatOrSharp);
+      }
+      
+      var s = new XMLSerializer();
+      var newXmlStr = s.serializeToString(xmlDoc);
+
+      return newXmlStr
+    },
+    updateResultXml() {
+        this.resultXml = this.updateScoreDef();
+        console.log(this.resultXml)
+    }
+  },
+  data() {
     return {
-      state,
-      getSlice,
-      taskId
+        selectedTask: {},
+        noClefToggle: false,
+        count: 0,
+        useFlat: false,
+        useSharp: false,
+        noKeyToggle: false,
+        resultXml: "",
+        sliceId: "",
+        sliceElements: [],
+        submitted: false
+      }
+    },
+
+    mounted() {
+      axios.get(`${settings.apiUrl}/tasks/${this.taskId}`)
+          .then(response => {
+            this.sliceId = this.taskId;
+            this.selectedTask = response.data;
+            this.updateResultXml();
+          });
     }
-  }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss"> 
+  .key-sharp-icon {
+      background: url("../assets/icons/key_signatures/sharp.png");
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+      height: 90%;
+      width: 90%;
+      position: relative;
+  }
+  .key-flat-icon {
+      background: url("../assets/icons/key_signatures/flat.png");
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+      height: 90%;
+      width: 90%;
+      position: relative;
+  }
+</style>
 
+<style lang="scss" scoped>
+  .btn {
+    justify-content: center;
+    margin: 0px 4px;
+    width: 64px;
+    height: 64px;
+  }
+    .btn > * {
+    padding: 3px;
+    height: 56px;
+  }
 </style>

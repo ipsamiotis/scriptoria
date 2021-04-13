@@ -15,15 +15,15 @@ export class NoteElement extends SliceElement {
     }
 
     octString() {
-        return this.oct ? 'oct=' + this.oct : '';
+        return this.oct ? `oct='${this.oct}'` : '';
     }
 
     accidString() {
-        return this.accidental ? 'accid=' + this.accidental : '';
+        return this.accidental ? `accid='${this.accidental}'` : '';
     }
 
     pnameString() {
-        return this.pname ? 'pname=' + this.pname : '';
+        return this.pname ? `pname='${this.pname}'` : '';
     }
 
     pitchUp() {
@@ -44,8 +44,16 @@ export class NoteElement extends SliceElement {
         }
     }
 
+    octUp() {
+        this.oct++;
+    }
+
+    octDown() {
+        this.oct--;
+    }
+
     toMei() {
-        return `<note ${this.octString()} ${this.pnameString()} ${this.accidString()} dur='${this.length}' dots='${this.dots}'>`;
+        return `<note ${this.octString()} ${this.pnameString()} ${this.accidString()} dur='${this.length}' dots='${this.dots}'/>`;
     }
 
     static fromAttributes(attr) {

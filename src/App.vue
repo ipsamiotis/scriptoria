@@ -28,5 +28,14 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  display: flex;
+  justify-content: center;
+}
+
+.task-header {
+  margin: 16px;
+}
+.task-header > * {
+  display: inline-block;
 }
 </style>

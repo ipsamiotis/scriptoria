@@ -12,7 +12,7 @@ export class ClefElement extends SliceElement {
     }
 
     toMei() {
-        return `<clef shape='${this.shape}' line='${this.line}'>`;
+        return `<clef shape='${this.shape}' line='${this.line}'/>`;
     }
 
     static fromAttributes(attr) {

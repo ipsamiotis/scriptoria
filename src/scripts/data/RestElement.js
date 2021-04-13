@@ -6,7 +6,7 @@ export class RestElement extends SliceElement {
     }
 
     toMei() {
-        return `<rest dur='${this.length}' dots='${this.dots}'>`;
+        return `<rest dur='${this.length}' dots='${this.dots}'/>`;
     }
 
     static fromAttributes(attr) {
