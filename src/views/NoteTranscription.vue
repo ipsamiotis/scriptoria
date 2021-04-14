@@ -34,7 +34,7 @@
                 </Button>
             </div>
 
-            <ToggleButton class="btn" v-model="dotToggle" onLabel="DOT" offLabel="DOT"/>
+            <ToggleButton @click=toggleDot class="btn" v-model="dotToggle" onLabel="DOT" offLabel="DOT"/>
             <ToggleButton class="btn" v-model="beamToggle" onLabel="BEAM" offLabel="BEAM"/>
 
             <div class="navigation">
@@ -158,9 +158,13 @@ export default {
         }
         return this.clefMap[clef];
     },
+    toggleDot(){
+        this.undoStack[this.undoStack.length - 1].dots = this.addDot;      
+        this.updateSVG();
+    },
     addNote(denominator) {
       const [pname, oct] = this.getNeutralPitch();
-      const note = new NoteElement(denominator, this.addDot, oct, pname);
+      const note = new NoteElement(denominator, "0", oct, pname);
 
       if (this.beamToggle) {
         const popped = this.sliceElements.pop();
@@ -184,7 +188,7 @@ export default {
       this.resetToggles();
     },
     addRest(denominator) {
-      const rest = new RestElement(denominator, this.addDot);
+      const rest = new RestElement(denominator, "0");
       this.sliceElements.push(rest);
       this.undoStack.push(rest);
       this.updateSVG();
