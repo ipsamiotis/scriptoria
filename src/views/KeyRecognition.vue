@@ -100,11 +100,22 @@ computed: {
     },
     // TODO: move to verovio helper somehow
     updateScoreDef() {
-      var parser = new DOMParser();
+      var parser = new DOMParser();      
+      var s = new XMLSerializer();
       var xmlDoc = parser.parseFromString(this.selectedTask.xml, "text/xml");
 
       var elements = xmlDoc.getElementsByTagName("measure");
       var n = xmlDoc.getElementsByTagName("staff")[0].getAttribute("n");
+
+
+      if (this.noKeyToggle) {
+          for (let sd of xmlDoc.getElementsByTagName("staffDef")) {
+            if (sd.getAttribute("n")==n) {
+              sd.removeAttribute("key.sig");
+            }
+          }
+        return s.serializeToString(xmlDoc);
+      } 
 
       var scoreDefs = xmlDoc.getElementsByTagName("scoreDef");
       var scoreDef = null
@@ -139,13 +150,10 @@ computed: {
         staffGrp.appendChild(staffDef);
       }
 
-      if (this.noKeyToggle) {
-        staffDef.removeAttribute("key.sig");
-      } else if (this.count > 0) {
+      if (this.count > 0) {
         staffDef.setAttribute("key.sig", this.count.toString() + this.flatOrSharp);
       }
       
-      var s = new XMLSerializer();
       var newXmlStr = s.serializeToString(xmlDoc);
 
       return newXmlStr

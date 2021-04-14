@@ -109,11 +109,23 @@ computed: {
     // TODO: move to verovio helper somehow
     updateScoreDef() {
       var parser = new DOMParser();
+      var s = new XMLSerializer();
       var xmlDoc = parser.parseFromString(this.selectedTask.xml, "text/xml");
 
       var elements = xmlDoc.getElementsByTagName("measure");
       var n = xmlDoc.getElementsByTagName("staff")[0].getAttribute("n");
 
+      if (this.noTimeToggle) {
+          for (let sd of xmlDoc.getElementsByTagName("staffDef")) {
+            if (sd.getAttribute("n")==n) {
+              sd.removeAttribute("meter.sym");
+              sd.removeAttribute("meter.count");
+              sd.removeAttribute("meter.unit");
+            }
+          }
+        return s.serializeToString(xmlDoc);
+      } 
+      
       var scoreDefs = xmlDoc.getElementsByTagName("scoreDef");
       var scoreDef = null
       if (scoreDefs.length > 0) {
@@ -147,11 +159,7 @@ computed: {
         staffGrp.appendChild(staffDef);
       }
 
-      if (this.noTimeToggle) {
-        staffDef.removeAttribute("meter.sym");
-        staffDef.removeAttribute("meter.count");
-        staffDef.removeAttribute("meter.unit");
-      } else if (this.commonTime) {
+      if (this.commonTime) {
         staffDef.setAttribute("meter.sym", "common");
       } else if (this.cutCommonTime) {
         staffDef.setAttribute("meter.sym", "cut");
@@ -160,7 +168,7 @@ computed: {
         staffDef.setAttribute("meter.unit", this.lower.toString());
       }
       
-      var s = new XMLSerializer();
+      
       var newXmlStr = s.serializeToString(xmlDoc);
 
       return newXmlStr
