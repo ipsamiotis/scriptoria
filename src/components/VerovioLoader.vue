@@ -1,8 +1,6 @@
 <template>
-  <div id="svg-viewer">
-    <div v-html="this.getSvg()"/>
     <ProgressSpinner v-if="loading" :style="this.spinnerStyle" strokeWidth="3" fill="#EEEEEE" />
-  </div>
+    <div :style="this.spinnerStyle" class="svg-viewer" v-else v-html="this.getSvg()"/>
 </template>
 
 <script>
@@ -40,7 +38,7 @@ export default {
       return this.context.replaceAll("<PUT_TASK_XML_HERE/>", this.measureSnippet)
     },
     spinnerStyle () {
-      return `width:${VerovioHelper.options.pageWidth}px; height:${VerovioHelper.options.pageHeight}px;`
+      return `width:${VerovioHelper.options.pageWidth}px; height:${VerovioHelper.options.pageHeight * (VerovioHelper.options.scale / 100)}px;`
     }
   },
   methods: {
@@ -51,7 +49,14 @@ export default {
       if (VerovioHelper.loaded) {
           this.loading = false;
           this.currentSvg = VerovioHelper.getSvgFromMei(this.mei);
+            // Sorry but I'm just way too lazy
+            this.currentSvg = this.currentSvg.replace(
+                '<g class="page-margin" transform="translate(500, 500)">',
+                '<g class="page-margin" transform="translate(0, 100)">'
+            )
+
           this.$nextTick(() => {
+
             this.$emit("svg-updated");
           });
       }
@@ -71,13 +76,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#svg-viewer {
+.svg-viewer {
   border-radius: 5px;
   border: 5px solid #DFE3E8;
   box-sizing: border-box;
 }
 
-[v-cloak] + .loader::before {
-  content: "Loading…"
+.svg-viewer ::v-deep svg  {
+    display: block;
+    padding-bottom: 25px;
 }
 </style>

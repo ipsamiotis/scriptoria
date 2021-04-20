@@ -2,7 +2,7 @@
   <div class="task" style="margin-bottom: 80px;">
     <div class="task-header">
 
-    <h2 style="margin-left: 48px;">Key Recognition</h2>
+    <h2 style="margin-left: 48px; margin-bottom: 0px;">Key Recognition</h2>
     <HelpPopup>
       <img style="width: 50%;" src="@/assets/tutorial_gifs/keyrec.gif">
       <p>Key signatures are only located at the very beginning of the measure and usually come in multiples.</p>
@@ -19,13 +19,19 @@
     </div>
 
     <div class="task-input">
-      <ToggleButton :disabled="submitted" @click="setNoKey();updateResultXml()" class="btn" v-model="noKeyToggle" onLabel="None" offLabel="None"/>
-      <ToggleButton :disabled="submitted" @click="setFlat();updateResultXml()" class="btn" v-model="useFlat" onIcon="key-flat-icon" offIcon="key-flat-icon"/>
-      <ToggleButton :disabled="submitted" @click="setSharp();updateResultXml()" class="btn" v-model="useSharp" onIcon="key-sharp-icon" offIcon="key-sharp-icon"/>
+      <span>
+          <ToggleButton :disabled="submitted" @click="setNoKey();updateResultXml()" class="btn" v-model="noKeyToggle" onLabel="None" offLabel="None"/>
+          <ToggleButton :disabled="submitted" @click="setFlat();updateResultXml()" class="btn" v-model="useFlat" onIcon="key-flat-icon" offIcon="key-flat-icon"/>
+          <ToggleButton :disabled="submitted" @click="setSharp();updateResultXml()" class="btn" v-model="useSharp" onIcon="key-sharp-icon" offIcon="key-sharp-icon"/>
+          <Divider style="display: inline; opacity: 0;" layout="vertical"/>
 
-      <Button v-model="count" class="btn p-button-outlined" :disabled="submitted || disabled || (!useSharp && !useFlat)"  @click="moreKeys();updateResultXml()">
-          <img v-bind:src="require('@/assets/icons/key_signatures/' + count + flatOrSharp + '.png')" />
-      </Button>
+          <Button v-model="count" class="btn p-button-outlined" :disabled="submitted || disabled || (!useSharp && !useFlat)"  @click="moreKeys();updateResultXml()">
+              <img v-bind:src="require('@/assets/icons/key_signatures/' + count + flatOrSharp + '.png')" />
+          </Button>
+          <Button class="btn p-button-outlined" @click="undo">
+              <img style="height: 75%;" src="@/assets/icons/undo.png"/>
+          </Button>    
+      </span>
     </div>
     <SubmitButton @submitted=disableUI :buttonDisabled="!canSubmit" :taskID="sliceId" :resultXml="resultXml"/>
 
@@ -42,6 +48,7 @@ import SliceViewer from "@/components/SliceViewer"
 import HelpPopup from "@/components/HelpPopup"
 import Button from 'primevue/button';
 import {settings} from "@/scripts/Settings";
+import Divider from 'primevue/divider';
 
 export default {
   name: "KeyRecognition",
@@ -50,7 +57,8 @@ export default {
     ToggleButton,
     SubmitButton,
     HelpPopup,
-    Button
+    Button,
+    Divider
   },
 computed: {
     canSubmit() {
@@ -97,6 +105,13 @@ computed: {
       this.useSharp = false;
       this.useFlat = false;
       this.count = 0;
+    },
+    undo() {
+        if (!this.useSharp && !this.useFlat) {return;}
+        this.count -= 1;
+        if (this.count <= 0) {
+            this.count = 7;
+        }
     },
     // TODO: move to verovio helper somehow
     updateScoreDef() {

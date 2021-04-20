@@ -9,8 +9,8 @@ import {BeamElement} from "@/scripts/data/BeamElement";
  */
 export class VerovioHelper {
     static options = {
-        pageHeight: 300,
-        scale: 100,
+        pageHeight: 230,
+        scale: 90,
         footer: "none",
         pageWidth: 600
     }

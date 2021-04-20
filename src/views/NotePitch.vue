@@ -1,7 +1,7 @@
 <template>
   <div class="task" style="margin-bottom: 80px;">
     <div class="task-header">
-      <h2 style="margin-left: 48px;">Pitch Transcription</h2>
+      <h2 style="margin-left: 48px; margin-bottom: 0px;">Pitch Transcription</h2>
           <HelpPopup>
       <img style="width: 50%;" src="@/assets/tutorial_gifs/pitchtrans.gif">
       <p>In this task we will modify the pitch (vertical position) of the notes to match the image.</p>
@@ -295,7 +295,7 @@ export default {
   // border: 3px solid rgb(0, 0, 0);
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-gap: 20px;
+  grid-gap: 4px;
   // align-items: flex-end;
   justify-content: center;
 

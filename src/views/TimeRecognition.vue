@@ -1,7 +1,7 @@
 <template>
   <div class="task" style="margin-bottom: 80px;">
     <div class="task-header">
-      <h2 style="margin-left: 48px;">Time Recognition</h2>
+      <h2 style="margin-left: 48px; margin-bottom: 0px;">Time Recognition</h2>
     <HelpPopup>
       <img style="width: 50%;" src="@/assets/tutorial_gifs/timerec.gif">
       <p>Time signatures usually appear at the beginning of a measure, so only focus on this area.</p>

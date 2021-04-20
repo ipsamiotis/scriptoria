@@ -1,7 +1,7 @@
 <template>
   <div class="task" style="margin-bottom: 80px;">
     <div class="task-header">
-      <h2 style="margin-left: 48px;">Rhythm Transcription</h2>
+      <h2 style="margin-left: 48px; margin-bottom: 0px;">Rhythm Transcription</h2>
       <!-- Try to match the left preview in the right panel, ignore the vertical position (pitch) of the notes. -->
     <HelpPopup>
       <img style="width: 50%;" src="@/assets/tutorial_gifs/notetrans.gif">
@@ -262,7 +262,7 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr auto;
-  grid-gap: 20px;
+  grid-gap: 8px;
 justify-items: start;
 
     grid-template-areas: 

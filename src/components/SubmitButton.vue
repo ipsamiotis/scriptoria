@@ -1,5 +1,5 @@
 <template>
-<div style="padding: 32px;">
+<div style="padding: 12px;">
   <Button v-if="this.buttonDisabled || this.disableOverride" disabled="true" class="submit-button-disabled">{{confirmText}}</Button>
   <Button v-else class="submit-button" @click=submit>{{confirmText}}</Button>
   </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="task" style="margin-bottom: 80px;">
     <div class="task-header">
-      <h2 style="margin-left: 48px;">Clef Recognition</h2>
+      <h2 style="margin-left: 48px; margin-bottom: 0px;">Clef Recognition</h2>
     <HelpPopup>
       <img style="width: 50%;" src="@/assets/tutorial_gifs/clefrec.gif">
       <p>Clefs can appear at the beginning, but also throughout the measure.</p>
