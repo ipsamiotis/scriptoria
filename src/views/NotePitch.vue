@@ -318,6 +318,7 @@ export default {
   }
   .btn-v {
     margin: 2px;
+    padding: 3px;
   }
   .btn-h {
     height: 50%;
