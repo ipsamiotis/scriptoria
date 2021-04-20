@@ -108,6 +108,14 @@ export default {
 
   methods: {
     updateHighlights() {
+      
+      // Mark the key/clef gray since they are not applicable (can be problematic if it has a clef that is not in the beginning)
+      let clef = document.getElementsByClassName("clef");
+      let keysig = document.getElementsByClassName("keySig");
+
+      if (clef) {clef[0].style.fill = "darkgray"}
+      if (keysig) {keysig[0].style.fill = "darkgray"}
+
       let elements = document.getElementsByClassName("layer")[0]?.children;
 
       // Otherwise crashes at array conversion
